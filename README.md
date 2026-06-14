@@ -1,3 +1,5 @@
+# <div align="center"><img src="docs/screenshots/hero.png" width="100%" alt="RideFlow Banner"/><br/>RideFlow</div>
+
 <div align="center">
   <h3>Intelligent Multi-Modal Journey Planner for Indian Urban Commuters</h3>
   <p>🏆 <i>Hackathon MVP Submission — Optimized for Functionality, Technical Depth, Innovation, Usability, and Real-World Scalability.</i></p>
@@ -10,8 +12,8 @@
 
 ---
 
-## 📽️ Demo Video
-📺 **[Watch the 3-5 Minute Video Demo Here](https://youtu.be/G32DoH6ffR8)**
+## 📽️ Demo Video & Resources
+📁 **[Prototype video, Presentation Deck explaining features, workflow and impact, and the Evaluation Report are present in this Google Drive](https://drive.google.com/drive/folders/1nbdUh2tS66GELzcrPr8d1soLxzjJOxR4)**
 
 ---
 
