@@ -1,12 +1,12 @@
 import { RouteCard } from '../components/RouteCard';
-import { ArrowLeft, Map } from 'lucide-react';
+import { ChevronLeft, SlidersHorizontal, Map, Leaf, ChevronDown } from 'lucide-react';
 
 function SkeletonCard() {
   return (
     <div className="card" style={{ gap: 12, display: 'flex', flexDirection: 'column' }}>
       <div className="skeleton" style={{ height: 20, width: '40%' }} />
       <div className="skeleton" style={{ height: 28, width: '80%' }} />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8 }}>
         <div className="skeleton" style={{ height: 56 }} />
         <div className="skeleton" style={{ height: 56 }} />
         <div className="skeleton" style={{ height: 56 }} />
@@ -23,25 +23,35 @@ export function RouteOptionsScreen({ routes, source, destination, preference, on
   }[preference] || 'Balanced';
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
+        background: '#3730A3',
         padding: '24px 20px',
+        paddingBottom: '32px',
         color: 'white',
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '16px'
       }}>
         <button
           onClick={onBack}
-          style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '8px 12px', borderRadius: 10, cursor: 'pointer', fontSize: 13, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6, transition: 'background 0.2s' }}
+          style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: 'white', width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'background 0.2s' }}
         >
-          <ArrowLeft size={16} /> Back
+          <ChevronLeft size={24} />
         </button>
-        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>
-          {source} <span style={{ color: '#818cf8', margin: '0 4px' }}>→</span> {destination}
-        </h2>
-        <p style={{ fontSize: 14, color: '#a5b4fc' }}>
-          {routes ? routes.length : 0} routes found · {prefLabel}
-        </p>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, lineHeight: 1.3 }}>
+            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{source}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+              <span style={{ color: '#a5b4fc', fontWeight: 400 }}>→</span>
+              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{destination}</span>
+            </div>
+          </h2>
+          <p style={{ fontSize: 13, color: '#c7d2fe' }}>
+            {routes ? routes.length : 0} routes found · {prefLabel}
+          </p>
+        </div>
       </div>
 
       {/* Route cards */}
@@ -59,17 +69,19 @@ export function RouteOptionsScreen({ routes, source, destination, preference, on
             <p style={{ color: '#64748B', fontSize: 14 }}>Try different locations</p>
           </div>
         ) : (
-          routes.map((route, i) => (
-            <RouteCard
-              key={route.routeId}
-              route={route}
-              delay={i * 80}
-              onClick={() => onSelect(route)}
-            />
-          ))
+          <>
+            {routes.map((route, i) => (
+              <RouteCard
+                key={route.routeId}
+                route={route}
+                delay={i * 80}
+                onClick={() => onSelect(route)}
+              />
+            ))}
+            
+          </>
         )}
       </div>
     </div>
   );
 }
-

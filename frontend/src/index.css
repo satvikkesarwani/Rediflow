@@ -72,10 +72,14 @@ body {
   }
 }
 
-/* Scrollbar */
-.app-shell::-webkit-scrollbar { width: 4px; }
-.app-shell::-webkit-scrollbar-track { background: transparent; }
-.app-shell::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+/* Hide Scrollbar to prevent breaking border-radius of the device frame */
+.app-shell::-webkit-scrollbar { 
+  display: none; 
+}
+.app-shell {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 
 /* Animations */

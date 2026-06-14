@@ -69,7 +69,7 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
             {tag.icon} {tag.label}
           </span>
         </div>
-        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{route.summary}</h2>
+        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, lineHeight: 1.3, wordBreak: 'break-word' }}>{route.summary}</h2>
         <p style={{ fontSize: 14, color: '#a5b4fc' }}>
           {route.totalTimeMinutes} min · ₹{route.totalFareRupees} · {route.transferCount} transfer(s)
         </p>
@@ -135,10 +135,10 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
 function Metric({ icon, label, value }) {
   const color = value === 'High' ? '#10B981' : value === 'Low' ? (label === 'Carbon' ? '#10B981' : '#EF4444') : '#F59E0B';
   return (
-    <div style={{ textAlign: 'center', padding: '12px 8px', background: '#f8fafc', borderRadius: 12 }}>
+    <div style={{ textAlign: 'center', padding: '12px 8px', background: '#f8fafc', borderRadius: 12, minWidth: 0, overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8, color: '#64748B' }}>{icon}</div>
-      <div style={{ fontSize: 12, color: '#64748B', marginBottom: 4, fontWeight: 500 }}>{label}</div>
-      <div style={{ fontSize: 14, fontWeight: 700, color }}>{value}</div>
+      <div style={{ fontSize: 12, color: '#64748B', marginBottom: 4, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</div>
     </div>
   );
 }
