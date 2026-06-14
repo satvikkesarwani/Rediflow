@@ -1,5 +1,3 @@
-# <div align="center"><img src="docs/screenshots/hero.png" width="100%" alt="RideFlow Banner"/><br/>RideFlow</div>
-
 <div align="center">
   <h3>Intelligent Multi-Modal Journey Planner for Indian Urban Commuters</h3>
   <p>🏆 <i>Hackathon MVP Submission — Optimized for Functionality, Technical Depth, Innovation, Usability, and Real-World Scalability.</i></p>
