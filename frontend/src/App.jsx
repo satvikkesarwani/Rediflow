@@ -24,14 +24,24 @@ const SCREENS = {
 };
 
 export default function App() {
-  const [screen, setScreen] = useState(SCREENS.HOME);
+  // Initialize state from sessionStorage if available
+  const [screen, setScreen] = useState(() => sessionStorage.getItem('app_screen') || SCREENS.HOME);
   const { toasts, addToast, removeToast } = useToast();
 
-  // State carried through the flow
-  const [searchResult, setSearchResult] = useState(null);
-  const [selectedRoute, setSelectedRoute] = useState(null);
-  const [bookingData, setBookingData] = useState(null);
-  const [paymentResult, setPaymentResult] = useState(null);
+  // State carried through the flow, persisted in sessionStorage
+  const [searchResult, setSearchResult] = useState(() => JSON.parse(sessionStorage.getItem('app_searchResult')) || null);
+  const [selectedRoute, setSelectedRoute] = useState(() => JSON.parse(sessionStorage.getItem('app_selectedRoute')) || null);
+  const [bookingData, setBookingData] = useState(() => JSON.parse(sessionStorage.getItem('app_bookingData')) || null);
+  const [paymentResult, setPaymentResult] = useState(() => JSON.parse(sessionStorage.getItem('app_paymentResult')) || null);
+
+  // Sync state to sessionStorage whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem('app_screen', screen);
+    if (searchResult) sessionStorage.setItem('app_searchResult', JSON.stringify(searchResult)); else sessionStorage.removeItem('app_searchResult');
+    if (selectedRoute) sessionStorage.setItem('app_selectedRoute', JSON.stringify(selectedRoute)); else sessionStorage.removeItem('app_selectedRoute');
+    if (bookingData) sessionStorage.setItem('app_bookingData', JSON.stringify(bookingData)); else sessionStorage.removeItem('app_bookingData');
+    if (paymentResult) sessionStorage.setItem('app_paymentResult', JSON.stringify(paymentResult)); else sessionStorage.removeItem('app_paymentResult');
+  }, [screen, searchResult, selectedRoute, bookingData, paymentResult]);
   const [walletBalance, setWalletBalance] = useState(500);
 
   // Sync wallet balance from backend on mount
