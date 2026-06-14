@@ -1,0 +1,225 @@
+[
+  {"routeId":"RF-R1","source":"Central Railway Station","destination":"Tech Park","legs":["LEG-W1","LEG-B1","LEG-M1","LEG-A1"],"summary":"Walk → Bus → Metro → Auto","totalTimeMinutes":54,"totalFareRupees":82,"transferCount":2,"totalWalkingMeters":650},
+  {"routeId":"RF-R2","source":"Central Railway Station","destination":"Tech Park","legs":["LEG-W2","LEG-T1","LEG-B2","LEG-W3"],"summary":"Walk → Train → Bus → Walk","totalTimeMinutes":68,"totalFareRupees":54,"transferCount":2,"totalWalkingMeters":1200},
+  {"routeId":"RF-R3","source":"Central Railway Station","destination":"Tech Park","legs":["LEG-A2","LEG-M2","LEG-W4"],"summary":"Auto → Metro → Walk","totalTimeMinutes":42,"totalFareRupees":130,"transferCount":1,"totalWalkingMeters":300},
+
+  {"routeId":"RF-R4","source":"Residential Area North","destination":"University Campus","legs":["LEG-W5","LEG-B3","LEG-W6"],"summary":"Walk → Bus → Walk","totalTimeMinutes":38,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":600},
+  {"routeId":"RF-R5","source":"Residential Area North","destination":"University Campus","legs":["LEG-A3","LEG-M3","LEG-W7"],"summary":"Auto → Metro → Walk","totalTimeMinutes":60,"totalFareRupees":115,"transferCount":1,"totalWalkingMeters":900},
+  {"routeId":"RF-R6","source":"Residential Area North","destination":"University Campus","legs":["LEG-W5","LEG-A3","LEG-W7"],"summary":"Walk → Auto → Walk","totalTimeMinutes":33,"totalFareRupees":70,"transferCount":0,"totalWalkingMeters":1100},
+
+  {"routeId":"RF-R7","source":"Central Railway Station","destination":"Metro Central","legs":["LEG-N01"],"summary":"Auto (Direct)","totalTimeMinutes":12,"totalFareRupees":55,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R8","source":"Central Railway Station","destination":"Metro Central","legs":["LEG-W1","LEG-N02"],"summary":"Walk → Bus","totalTimeMinutes":26,"totalFareRupees":12,"transferCount":0,"totalWalkingMeters":400},
+  {"routeId":"RF-R9","source":"Central Railway Station","destination":"Metro Central","legs":["LEG-N03"],"summary":"Walk (Scenic Route)","totalTimeMinutes":35,"totalFareRupees":0,"transferCount":0,"totalWalkingMeters":2800},
+
+  {"routeId":"RF-R10","source":"Central Railway Station","destination":"City Bus Depot","legs":["LEG-N04"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":80,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R11","source":"Central Railway Station","destination":"City Bus Depot","legs":["LEG-N05"],"summary":"Train (Direct)","totalTimeMinutes":22,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R12","source":"Central Railway Station","destination":"City Bus Depot","legs":["LEG-W1","LEG-N06"],"summary":"Walk → Bus","totalTimeMinutes":36,"totalFareRupees":15,"transferCount":0,"totalWalkingMeters":400},
+
+  {"routeId":"RF-R13","source":"Central Railway Station","destination":"University Campus","legs":["LEG-N07"],"summary":"Auto (Direct)","totalTimeMinutes":30,"totalFareRupees":120,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R14","source":"Central Railway Station","destination":"University Campus","legs":["LEG-W1","LEG-N08","LEG-N09"],"summary":"Walk → Bus (Direct) → Walk","totalTimeMinutes":55,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":700},
+  {"routeId":"RF-R15","source":"Central Railway Station","destination":"University Campus","legs":["LEG-N01","LEG-N29","LEG-N09"],"summary":"Auto → Bus → Walk","totalTimeMinutes":55,"totalFareRupees":75,"transferCount":1,"totalWalkingMeters":300},
+
+  {"routeId":"RF-R16","source":"Central Railway Station","destination":"Residential Area North","legs":["LEG-N10"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R17","source":"Central Railway Station","destination":"Residential Area North","legs":["LEG-W1","LEG-N11"],"summary":"Walk → Bus","totalTimeMinutes":41,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":400},
+  {"routeId":"RF-R18","source":"Central Railway Station","destination":"Residential Area North","legs":["LEG-N01","LEG-N12"],"summary":"Auto → Bus","totalTimeMinutes":30,"totalFareRupees":67,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R19","source":"Central Railway Station","destination":"Airport Road","legs":["LEG-N13"],"summary":"Auto (Direct)","totalTimeMinutes":28,"totalFareRupees":115,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R20","source":"Central Railway Station","destination":"Airport Road","legs":["LEG-N01","LEG-N14"],"summary":"Auto → Metro","totalTimeMinutes":40,"totalFareRupees":95,"transferCount":1,"totalWalkingMeters":0},
+  {"routeId":"RF-R21","source":"Central Railway Station","destination":"Airport Road","legs":["LEG-W1","LEG-N15"],"summary":"Walk → Airport Bus","totalTimeMinutes":46,"totalFareRupees":25,"transferCount":0,"totalWalkingMeters":400},
+
+  {"routeId":"RF-R22","source":"Central Railway Station","destination":"Shopping Mall","legs":["LEG-N16"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":75,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R23","source":"Central Railway Station","destination":"Shopping Mall","legs":["LEG-N01","LEG-N17"],"summary":"Auto → Metro","totalTimeMinutes":27,"totalFareRupees":80,"transferCount":1,"totalWalkingMeters":0},
+  {"routeId":"RF-R24","source":"Central Railway Station","destination":"Shopping Mall","legs":["LEG-W1","LEG-N18"],"summary":"Walk → Bus","totalTimeMinutes":31,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":400},
+
+  {"routeId":"RF-R25","source":"Metro Central","destination":"Central Railway Station","legs":["LEG-N19"],"summary":"Auto (Direct)","totalTimeMinutes":13,"totalFareRupees":58,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R26","source":"Metro Central","destination":"Central Railway Station","legs":["LEG-N20"],"summary":"Bus (Direct)","totalTimeMinutes":22,"totalFareRupees":12,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R27","source":"Metro Central","destination":"Central Railway Station","legs":["LEG-N21"],"summary":"Metro (Direct)","totalTimeMinutes":10,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R28","source":"Metro Central","destination":"City Bus Depot","legs":["LEG-N22"],"summary":"Auto (Direct)","totalTimeMinutes":15,"totalFareRupees":65,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R29","source":"Metro Central","destination":"City Bus Depot","legs":["LEG-N23"],"summary":"Bus (Direct)","totalTimeMinutes":25,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R30","source":"Metro Central","destination":"City Bus Depot","legs":["LEG-N24"],"summary":"Walk (Eco Route)","totalTimeMinutes":45,"totalFareRupees":0,"transferCount":0,"totalWalkingMeters":3600},
+
+  {"routeId":"RF-R31","source":"Metro Central","destination":"Tech Park","legs":["LEG-N25","LEG-W4"],"summary":"Metro → Walk","totalTimeMinutes":30,"totalFareRupees":35,"transferCount":0,"totalWalkingMeters":600},
+  {"routeId":"RF-R32","source":"Metro Central","destination":"Tech Park","legs":["LEG-N26","LEG-W3"],"summary":"Bus → Walk","totalTimeMinutes":40,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":850},
+  {"routeId":"RF-R33","source":"Metro Central","destination":"Tech Park","legs":["LEG-N27"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R34","source":"Metro Central","destination":"University Campus","legs":["LEG-N28"],"summary":"Auto (Direct)","totalTimeMinutes":25,"totalFareRupees":100,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R35","source":"Metro Central","destination":"University Campus","legs":["LEG-N29","LEG-N09"],"summary":"Bus → Walk","totalTimeMinutes":42,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":300},
+  {"routeId":"RF-R36","source":"Metro Central","destination":"University Campus","legs":["LEG-N30","LEG-N89"],"summary":"Metro → Walk","totalTimeMinutes":40,"totalFareRupees":40,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R37","source":"Metro Central","destination":"Residential Area North","legs":["LEG-N31"],"summary":"Bus (Direct)","totalTimeMinutes":20,"totalFareRupees":12,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R38","source":"Metro Central","destination":"Residential Area North","legs":["LEG-N32"],"summary":"Auto (Direct)","totalTimeMinutes":16,"totalFareRupees":65,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R39","source":"Metro Central","destination":"Residential Area North","legs":["LEG-N33"],"summary":"Walk (Eco Route)","totalTimeMinutes":55,"totalFareRupees":0,"transferCount":0,"totalWalkingMeters":4400},
+
+  {"routeId":"RF-R40","source":"Metro Central","destination":"Airport Road","legs":["LEG-N34"],"summary":"Metro (Direct)","totalTimeMinutes":28,"totalFareRupees":40,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R41","source":"Metro Central","destination":"Airport Road","legs":["LEG-N35"],"summary":"Bus (Direct)","totalTimeMinutes":35,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R42","source":"Metro Central","destination":"Airport Road","legs":["LEG-N36"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":95,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R43","source":"Metro Central","destination":"Shopping Mall","legs":["LEG-N37"],"summary":"Metro (Direct)","totalTimeMinutes":14,"totalFareRupees":25,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R44","source":"Metro Central","destination":"Shopping Mall","legs":["LEG-N38"],"summary":"Bus (Direct)","totalTimeMinutes":22,"totalFareRupees":12,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R45","source":"Metro Central","destination":"Shopping Mall","legs":["LEG-N39"],"summary":"Auto (Direct)","totalTimeMinutes":12,"totalFareRupees":55,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R46","source":"City Bus Depot","destination":"Central Railway Station","legs":["LEG-N40"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":82,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R47","source":"City Bus Depot","destination":"Central Railway Station","legs":["LEG-N41"],"summary":"Bus (Direct)","totalTimeMinutes":32,"totalFareRupees":15,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R48","source":"City Bus Depot","destination":"Central Railway Station","legs":["LEG-N42"],"summary":"Train (Direct)","totalTimeMinutes":24,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R49","source":"City Bus Depot","destination":"Metro Central","legs":["LEG-N43"],"summary":"Auto (Direct)","totalTimeMinutes":16,"totalFareRupees":68,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R50","source":"City Bus Depot","destination":"Metro Central","legs":["LEG-N44"],"summary":"Bus (Direct)","totalTimeMinutes":26,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R51","source":"City Bus Depot","destination":"Metro Central","legs":["LEG-N45"],"summary":"Metro Shuttle (Direct)","totalTimeMinutes":12,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R52","source":"City Bus Depot","destination":"Tech Park","legs":["LEG-N46","LEG-W3"],"summary":"Bus → Walk","totalTimeMinutes":38,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":850},
+  {"routeId":"RF-R53","source":"City Bus Depot","destination":"Tech Park","legs":["LEG-N47"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":85,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R54","source":"City Bus Depot","destination":"Tech Park","legs":["LEG-N48","LEG-M1","LEG-W4"],"summary":"Bus → Metro → Walk","totalTimeMinutes":52,"totalFareRupees":69,"transferCount":1,"totalWalkingMeters":600},
+
+  {"routeId":"RF-R55","source":"City Bus Depot","destination":"University Campus","legs":["LEG-N49","LEG-W6"],"summary":"Bus → Walk","totalTimeMinutes":40,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":400},
+  {"routeId":"RF-R56","source":"City Bus Depot","destination":"University Campus","legs":["LEG-N50"],"summary":"Auto (Direct)","totalTimeMinutes":25,"totalFareRupees":100,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R57","source":"City Bus Depot","destination":"University Campus","legs":["LEG-N45","LEG-N30","LEG-N89"],"summary":"Metro Shuttle → Metro → Walk","totalTimeMinutes":50,"totalFareRupees":62,"transferCount":1,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R58","source":"City Bus Depot","destination":"Residential Area North","legs":["LEG-N51"],"summary":"Bus (Direct)","totalTimeMinutes":28,"totalFareRupees":16,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R59","source":"City Bus Depot","destination":"Residential Area North","legs":["LEG-N52"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":82,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R60","source":"City Bus Depot","destination":"Residential Area North","legs":["LEG-N45","LEG-N31"],"summary":"Metro Shuttle → Bus","totalTimeMinutes":32,"totalFareRupees":34,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R61","source":"City Bus Depot","destination":"Airport Road","legs":["LEG-N53"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R62","source":"City Bus Depot","destination":"Airport Road","legs":["LEG-N54"],"summary":"Airport Bus (Direct)","totalTimeMinutes":30,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R63","source":"City Bus Depot","destination":"Airport Road","legs":["LEG-N45","LEG-N34"],"summary":"Metro Shuttle → Metro","totalTimeMinutes":40,"totalFareRupees":62,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R64","source":"City Bus Depot","destination":"Shopping Mall","legs":["LEG-N55"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":76,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R65","source":"City Bus Depot","destination":"Shopping Mall","legs":["LEG-N56"],"summary":"Bus (Direct)","totalTimeMinutes":26,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R66","source":"City Bus Depot","destination":"Shopping Mall","legs":["LEG-N45","LEG-N37"],"summary":"Metro Shuttle → Metro","totalTimeMinutes":26,"totalFareRupees":47,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R67","source":"Tech Park","destination":"Central Railway Station","legs":["LEG-N57"],"summary":"Auto (Direct)","totalTimeMinutes":30,"totalFareRupees":130,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R68","source":"Tech Park","destination":"Central Railway Station","legs":["LEG-N58"],"summary":"Bus (Direct)","totalTimeMinutes":40,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R69","source":"Tech Park","destination":"Central Railway Station","legs":["LEG-N59"],"summary":"Metro (Direct)","totalTimeMinutes":25,"totalFareRupees":35,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R70","source":"Tech Park","destination":"Metro Central","legs":["LEG-N60"],"summary":"Metro (Direct)","totalTimeMinutes":22,"totalFareRupees":35,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R71","source":"Tech Park","destination":"Metro Central","legs":["LEG-N61"],"summary":"Bus (Direct)","totalTimeMinutes":30,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R72","source":"Tech Park","destination":"Metro Central","legs":["LEG-N62"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":92,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R73","source":"Tech Park","destination":"City Bus Depot","legs":["LEG-N63"],"summary":"Metro (Direct)","totalTimeMinutes":18,"totalFareRupees":28,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R74","source":"Tech Park","destination":"City Bus Depot","legs":["LEG-N64"],"summary":"Bus (Direct)","totalTimeMinutes":28,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R75","source":"Tech Park","destination":"City Bus Depot","legs":["LEG-N65"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":84,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R76","source":"Tech Park","destination":"University Campus","legs":["LEG-N66"],"summary":"Auto (Direct)","totalTimeMinutes":35,"totalFareRupees":140,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R77","source":"Tech Park","destination":"University Campus","legs":["LEG-N67","LEG-W6"],"summary":"Bus → Walk","totalTimeMinutes":50,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":400},
+  {"routeId":"RF-R78","source":"Tech Park","destination":"University Campus","legs":["LEG-N68","LEG-N89"],"summary":"Metro → Walk","totalTimeMinutes":22,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R79","source":"Tech Park","destination":"Residential Area North","legs":["LEG-N69"],"summary":"Auto (Direct)","totalTimeMinutes":28,"totalFareRupees":115,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R80","source":"Tech Park","destination":"Residential Area North","legs":["LEG-N70"],"summary":"Bus (Direct)","totalTimeMinutes":40,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R81","source":"Tech Park","destination":"Residential Area North","legs":["LEG-N60","LEG-N31"],"summary":"Metro → Bus","totalTimeMinutes":42,"totalFareRupees":47,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R82","source":"Tech Park","destination":"Airport Road","legs":["LEG-N72"],"summary":"Metro (Direct)","totalTimeMinutes":10,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R83","source":"Tech Park","destination":"Airport Road","legs":["LEG-N73"],"summary":"Airport Bus (Direct)","totalTimeMinutes":20,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R84","source":"Tech Park","destination":"Airport Road","legs":["LEG-N74"],"summary":"Auto (Direct)","totalTimeMinutes":15,"totalFareRupees":65,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R85","source":"Tech Park","destination":"Shopping Mall","legs":["LEG-N75"],"summary":"Metro (Direct)","totalTimeMinutes":18,"totalFareRupees":30,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R86","source":"Tech Park","destination":"Shopping Mall","legs":["LEG-N76"],"summary":"Bus (Direct)","totalTimeMinutes":28,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R87","source":"Tech Park","destination":"Shopping Mall","legs":["LEG-N77"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":85,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R88","source":"University Campus","destination":"Central Railway Station","legs":["LEG-N78"],"summary":"Auto (Direct)","totalTimeMinutes":30,"totalFareRupees":122,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R89","source":"University Campus","destination":"Central Railway Station","legs":["LEG-N79"],"summary":"Bus (Direct)","totalTimeMinutes":48,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R90","source":"University Campus","destination":"Central Railway Station","legs":["LEG-N89","LEG-N80"],"summary":"Walk → Metro","totalTimeMinutes":42,"totalFareRupees":45,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R91","source":"University Campus","destination":"Metro Central","legs":["LEG-N81"],"summary":"Auto (Direct)","totalTimeMinutes":25,"totalFareRupees":100,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R92","source":"University Campus","destination":"Metro Central","legs":["LEG-N82"],"summary":"Bus (Direct)","totalTimeMinutes":38,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R93","source":"University Campus","destination":"Metro Central","legs":["LEG-N89","LEG-N110"],"summary":"Walk → Metro","totalTimeMinutes":40,"totalFareRupees":40,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R94","source":"University Campus","destination":"City Bus Depot","legs":["LEG-N84"],"summary":"Auto (Direct)","totalTimeMinutes":25,"totalFareRupees":100,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R95","source":"University Campus","destination":"City Bus Depot","legs":["LEG-N83"],"summary":"Bus (Direct)","totalTimeMinutes":36,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R96","source":"University Campus","destination":"City Bus Depot","legs":["LEG-N89","LEG-N113"],"summary":"Walk → Auto","totalTimeMinutes":34,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R97","source":"University Campus","destination":"Tech Park","legs":["LEG-N85"],"summary":"Auto (Direct)","totalTimeMinutes":35,"totalFareRupees":140,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R98","source":"University Campus","destination":"Tech Park","legs":["LEG-N86","LEG-W4"],"summary":"Bus → Walk","totalTimeMinutes":52,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":600},
+  {"routeId":"RF-R99","source":"University Campus","destination":"Tech Park","legs":["LEG-N89","LEG-N115","LEG-W4"],"summary":"Walk → Metro → Walk","totalTimeMinutes":30,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":1500},
+
+  {"routeId":"RF-R100","source":"University Campus","destination":"Residential Area North","legs":["LEG-N87"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":72,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R101","source":"University Campus","destination":"Residential Area North","legs":["LEG-N88"],"summary":"Bus (Direct)","totalTimeMinutes":30,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R102","source":"University Campus","destination":"Residential Area North","legs":["LEG-N81","LEG-N32"],"summary":"Auto → Auto","totalTimeMinutes":41,"totalFareRupees":165,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R103","source":"University Campus","destination":"Airport Road","legs":["LEG-N90"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R104","source":"University Campus","destination":"Airport Road","legs":["LEG-N91"],"summary":"Airport Bus (Direct)","totalTimeMinutes":32,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R105","source":"University Campus","destination":"Airport Road","legs":["LEG-N89","LEG-N34"],"summary":"Walk → Metro","totalTimeMinutes":40,"totalFareRupees":40,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R106","source":"University Campus","destination":"Shopping Mall","legs":["LEG-N92"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":82,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R107","source":"University Campus","destination":"Shopping Mall","legs":["LEG-N93"],"summary":"Bus (Direct)","totalTimeMinutes":30,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R108","source":"University Campus","destination":"Shopping Mall","legs":["LEG-N89","LEG-N141"],"summary":"Walk → Metro","totalTimeMinutes":27,"totalFareRupees":28,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R109","source":"Residential Area North","destination":"Central Railway Station","legs":["LEG-N95"],"summary":"Auto (Direct)","totalTimeMinutes":24,"totalFareRupees":92,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R110","source":"Residential Area North","destination":"Central Railway Station","legs":["LEG-N94"],"summary":"Bus (Direct)","totalTimeMinutes":36,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R111","source":"Residential Area North","destination":"Central Railway Station","legs":["LEG-N97","LEG-N96"],"summary":"Auto → Metro","totalTimeMinutes":28,"totalFareRupees":88,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R112","source":"Residential Area North","destination":"Metro Central","legs":["LEG-N97"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":68,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R113","source":"Residential Area North","destination":"Metro Central","legs":["LEG-N98"],"summary":"Bus (Direct)","totalTimeMinutes":20,"totalFareRupees":12,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R114","source":"Residential Area North","destination":"Metro Central","legs":["LEG-W5","LEG-A3","LEG-N19"],"summary":"Walk → Auto → Auto","totalTimeMinutes":33,"totalFareRupees":128,"transferCount":1,"totalWalkingMeters":200},
+
+  {"routeId":"RF-R115","source":"Residential Area North","destination":"City Bus Depot","legs":["LEG-N99"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":85,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R116","source":"Residential Area North","destination":"City Bus Depot","legs":["LEG-N100"],"summary":"Bus (Direct)","totalTimeMinutes":28,"totalFareRupees":16,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R117","source":"Residential Area North","destination":"City Bus Depot","legs":["LEG-N98","LEG-N23"],"summary":"Bus → Bus","totalTimeMinutes":45,"totalFareRupees":26,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R118","source":"Residential Area North","destination":"Tech Park","legs":["LEG-N101"],"summary":"Auto (Direct)","totalTimeMinutes":32,"totalFareRupees":128,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R119","source":"Residential Area North","destination":"Tech Park","legs":["LEG-N102","LEG-W3"],"summary":"Bus → Walk","totalTimeMinutes":55,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":850},
+  {"routeId":"RF-R120","source":"Residential Area North","destination":"Tech Park","legs":["LEG-A3","LEG-M2","LEG-W4"],"summary":"Auto → Metro → Walk","totalTimeMinutes":48,"totalFareRupees":105,"transferCount":1,"totalWalkingMeters":600},
+
+  {"routeId":"RF-R121","source":"Residential Area North","destination":"Airport Road","legs":["LEG-N103"],"summary":"Auto (Direct)","totalTimeMinutes":26,"totalFareRupees":105,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R122","source":"Residential Area North","destination":"Airport Road","legs":["LEG-N104"],"summary":"Airport Bus (Direct)","totalTimeMinutes":38,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R123","source":"Residential Area North","destination":"Airport Road","legs":["LEG-A3","LEG-M3"],"summary":"Auto → Metro","totalTimeMinutes":48,"totalFareRupees":115,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R124","source":"Residential Area North","destination":"Shopping Mall","legs":["LEG-N105"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":88,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R125","source":"Residential Area North","destination":"Shopping Mall","legs":["LEG-N106"],"summary":"Bus (Direct)","totalTimeMinutes":32,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R126","source":"Residential Area North","destination":"Shopping Mall","legs":["LEG-N97","LEG-N37"],"summary":"Auto → Metro","totalTimeMinutes":32,"totalFareRupees":93,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R127","source":"Airport Road","destination":"Central Railway Station","legs":["LEG-N109"],"summary":"Auto (Direct)","totalTimeMinutes":28,"totalFareRupees":118,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R128","source":"Airport Road","destination":"Central Railway Station","legs":["LEG-N108"],"summary":"Airport Bus (Direct)","totalTimeMinutes":42,"totalFareRupees":25,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R129","source":"Airport Road","destination":"Central Railway Station","legs":["LEG-N107"],"summary":"Metro (Direct)","totalTimeMinutes":30,"totalFareRupees":45,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R130","source":"Airport Road","destination":"Metro Central","legs":["LEG-N110"],"summary":"Metro (Direct)","totalTimeMinutes":28,"totalFareRupees":40,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R131","source":"Airport Road","destination":"Metro Central","legs":["LEG-N111"],"summary":"Airport Bus (Direct)","totalTimeMinutes":35,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R132","source":"Airport Road","destination":"Metro Central","legs":["LEG-N112"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":95,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R133","source":"Airport Road","destination":"City Bus Depot","legs":["LEG-N113"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R134","source":"Airport Road","destination":"City Bus Depot","legs":["LEG-N114"],"summary":"Airport Bus (Direct)","totalTimeMinutes":30,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R135","source":"Airport Road","destination":"City Bus Depot","legs":["LEG-N110","LEG-N23"],"summary":"Metro → Bus","totalTimeMinutes":53,"totalFareRupees":54,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R136","source":"Airport Road","destination":"Tech Park","legs":["LEG-N115","LEG-W4"],"summary":"Metro → Walk","totalTimeMinutes":18,"totalFareRupees":20,"transferCount":0,"totalWalkingMeters":600},
+  {"routeId":"RF-R137","source":"Airport Road","destination":"Tech Park","legs":["LEG-N116","LEG-W3"],"summary":"Airport Bus → Walk","totalTimeMinutes":30,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":850},
+  {"routeId":"RF-R138","source":"Airport Road","destination":"Tech Park","legs":["LEG-N117"],"summary":"Auto (Direct)","totalTimeMinutes":15,"totalFareRupees":65,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R139","source":"Airport Road","destination":"University Campus","legs":["LEG-N118"],"summary":"Walk (Scenic)","totalTimeMinutes":12,"totalFareRupees":0,"transferCount":0,"totalWalkingMeters":900},
+  {"routeId":"RF-R140","source":"Airport Road","destination":"University Campus","legs":["LEG-N119"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":90,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R141","source":"Airport Road","destination":"University Campus","legs":["LEG-N120","LEG-W6"],"summary":"Airport Bus → Walk","totalTimeMinutes":35,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":400},
+
+  {"routeId":"RF-R142","source":"Airport Road","destination":"Residential Area North","legs":["LEG-N121"],"summary":"Auto (Direct)","totalTimeMinutes":26,"totalFareRupees":105,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R143","source":"Airport Road","destination":"Residential Area North","legs":["LEG-N122"],"summary":"Airport Bus (Direct)","totalTimeMinutes":38,"totalFareRupees":22,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R144","source":"Airport Road","destination":"Residential Area North","legs":["LEG-N110","LEG-N31"],"summary":"Metro → Bus","totalTimeMinutes":48,"totalFareRupees":52,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R145","source":"Airport Road","destination":"Shopping Mall","legs":["LEG-N123"],"summary":"Metro (Direct)","totalTimeMinutes":15,"totalFareRupees":28,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R146","source":"Airport Road","destination":"Shopping Mall","legs":["LEG-N124"],"summary":"Bus (Direct)","totalTimeMinutes":24,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R147","source":"Airport Road","destination":"Shopping Mall","legs":["LEG-N125"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":78,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R148","source":"Shopping Mall","destination":"Central Railway Station","legs":["LEG-N128"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":80,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R149","source":"Shopping Mall","destination":"Central Railway Station","legs":["LEG-N127"],"summary":"Bus (Direct)","totalTimeMinutes":28,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R150","source":"Shopping Mall","destination":"Central Railway Station","legs":["LEG-N126"],"summary":"Metro (Direct)","totalTimeMinutes":20,"totalFareRupees":28,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R151","source":"Shopping Mall","destination":"Metro Central","legs":["LEG-N131"],"summary":"Auto (Direct)","totalTimeMinutes":14,"totalFareRupees":58,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R152","source":"Shopping Mall","destination":"Metro Central","legs":["LEG-N130"],"summary":"Bus (Direct)","totalTimeMinutes":22,"totalFareRupees":12,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R153","source":"Shopping Mall","destination":"Metro Central","legs":["LEG-N129"],"summary":"Metro (Direct)","totalTimeMinutes":14,"totalFareRupees":25,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R154","source":"Shopping Mall","destination":"City Bus Depot","legs":["LEG-N132"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":76,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R155","source":"Shopping Mall","destination":"City Bus Depot","legs":["LEG-N133"],"summary":"Bus (Direct)","totalTimeMinutes":26,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R156","source":"Shopping Mall","destination":"City Bus Depot","legs":["LEG-N129","LEG-N23"],"summary":"Metro → Bus","totalTimeMinutes":39,"totalFareRupees":39,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R157","source":"Shopping Mall","destination":"Tech Park","legs":["LEG-N134","LEG-W4"],"summary":"Metro → Walk","totalTimeMinutes":26,"totalFareRupees":30,"transferCount":0,"totalWalkingMeters":600},
+  {"routeId":"RF-R158","source":"Shopping Mall","destination":"Tech Park","legs":["LEG-N135","LEG-W3"],"summary":"Bus → Walk","totalTimeMinutes":38,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":850},
+  {"routeId":"RF-R159","source":"Shopping Mall","destination":"Tech Park","legs":["LEG-N136"],"summary":"Auto (Direct)","totalTimeMinutes":20,"totalFareRupees":84,"transferCount":0,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R160","source":"Shopping Mall","destination":"University Campus","legs":["LEG-N137"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":88,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R161","source":"Shopping Mall","destination":"University Campus","legs":["LEG-N138","LEG-W6"],"summary":"Bus → Walk","totalTimeMinutes":35,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":400},
+  {"routeId":"RF-R162","source":"Shopping Mall","destination":"University Campus","legs":["LEG-N141","LEG-N89"],"summary":"Metro → Walk","totalTimeMinutes":27,"totalFareRupees":28,"transferCount":0,"totalWalkingMeters":900},
+
+  {"routeId":"RF-R163","source":"Shopping Mall","destination":"Residential Area North","legs":["LEG-N139"],"summary":"Auto (Direct)","totalTimeMinutes":22,"totalFareRupees":88,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R164","source":"Shopping Mall","destination":"Residential Area North","legs":["LEG-N140"],"summary":"Bus (Direct)","totalTimeMinutes":32,"totalFareRupees":14,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R165","source":"Shopping Mall","destination":"Residential Area North","legs":["LEG-N129","LEG-N31"],"summary":"Metro → Bus","totalTimeMinutes":34,"totalFareRupees":37,"transferCount":1,"totalWalkingMeters":0},
+
+  {"routeId":"RF-R166","source":"Shopping Mall","destination":"Airport Road","legs":["LEG-N141"],"summary":"Metro (Direct)","totalTimeMinutes":15,"totalFareRupees":28,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R167","source":"Shopping Mall","destination":"Airport Road","legs":["LEG-N142"],"summary":"Airport Bus (Direct)","totalTimeMinutes":24,"totalFareRupees":18,"transferCount":0,"totalWalkingMeters":0},
+  {"routeId":"RF-R168","source":"Shopping Mall","destination":"Airport Road","legs":["LEG-N143"],"summary":"Auto (Direct)","totalTimeMinutes":18,"totalFareRupees":78,"transferCount":0,"totalWalkingMeters":0}
+]

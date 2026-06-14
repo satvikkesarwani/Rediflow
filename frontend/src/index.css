@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --primary: #3730A3;
+  --primary-light: #4F46E5;
+  --primary-dark: #2E27A3;
+  --accent: #F59E0B;
+  --success: #10B981;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+
+  /* mode colors */
+  --walk: #94A3B8;
+  --bus: #3B82F6;
+  --metro: #4F46E5;
+  --train: #7C3AED;
+  --auto: #F59E0B;
+  --cab: #F97316;
+  --bike: #22C55E;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #E2E8F0;
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.app-shell {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  overflow-x: hidden;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  #root {
+    padding: 2rem 0;
+  }
+  .app-shell {
+    max-width: 414px;
+    height: 896px;
+    min-height: auto;
+    border-radius: 40px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 12px #1e293b, inset 0 0 0 4px #0f172a;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* Scrollbar */
+.app-shell::-webkit-scrollbar { width: 4px; }
+.app-shell::-webkit-scrollbar-track { background: transparent; }
+.app-shell::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.4s ease both; }
+.animate-fade-in { animation: fadeIn 0.3s ease both; }
+.animate-scale-in { animation: scaleIn 0.35s ease both; }
+.animate-slide-right { animation: slideInRight 0.35s ease both; }
+.animate-bounce-gentle { animation: bounce 1.5s ease infinite; }
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.10s; }
+.stagger-3 { animation-delay: 0.15s; }
+
+/* Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 90%;
+  max-width: 440px;
+}
+
+.toast {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInUp 0.3s ease both;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.toast-success { background: #10B981; color: white; }
+.toast-error { background: #EF4444; color: white; }
+.toast-info { background: #3B82F6; color: white; }
+.toast-warning { background: #F59E0B; color: white; }
+
+/* Card */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  border: 1px solid #E2E8F0;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+  transform: translateY(-2px);
+}
+
+/* Tag badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-recommended { background: #EEF2FF; color: #3730A3; border: 1.5px solid #4F46E5; }
+.badge-fastest { background: #FEF3C7; color: #B45309; border: 1.5px solid #F59E0B; }
+.badge-cheapest { background: #ECFDF5; color: #065F46; border: 1.5px solid #10B981; }
+.badge-eco { background: #F0FDF4; color: #166534; border: 1.5px solid #22C55E; }
+.badge-alt { background: #F8FAFC; color: #475569; border: 1.5px solid #CBD5E1; }
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #4F46E5, #3730A3);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(79,70,229,0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79,70,229,0.45);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 13px;
+  background: white;
+  color: #3730A3;
+  border: 2px solid #4F46E5;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #EEF2FF;
+}
+
+/* Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Mode dot colors */
+.mode-walk { background: #94A3B8; }
+.mode-bus { background: #3B82F6; }
+.mode-metro { background: #4F46E5; }
+.mode-train { background: #7C3AED; }
+.mode-auto { background: #F59E0B; }
+.mode-cab { background: #F97316; }
+.mode-bike { background: #22C55E; }
+
+/* Screen transitions */
+.screen-enter {
+  animation: fadeInUp 0.35s ease both;
+}

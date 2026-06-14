@@ -1,0 +1,125 @@
+[
+  {
+    "patternId": "PAT-DEFAULT",
+    "updates": [
+      {
+        "order": 1,
+        "message": "Bus 335E arriving in 4 minutes at Bay 3. Please make your way to the stop.",
+        "type": "arrival",
+        "delayMinutes": 0
+      },
+      {
+        "order": 2,
+        "message": "You are on board Bus 335E. Next stop: Metro Central. Estimated arrival in 18 minutes.",
+        "type": "departure",
+        "delayMinutes": 0
+      },
+      {
+        "order": 3,
+        "message": "Blue Line Metro expected on Platform 2. Train departing in 3 minutes towards Airport Road.",
+        "type": "platform",
+        "delayMinutes": 0
+      },
+      {
+        "order": 4,
+        "message": "Minor delay detected on Blue Line. ETA updated by 5 minutes due to signal work at Tech Park Junction.",
+        "type": "delay",
+        "delayMinutes": 5
+      },
+      {
+        "order": 5,
+        "message": "Auto driver arriving at Tech Park Metro Gate 1. Booking reference: AUTO-RF. Please proceed to Gate 1.",
+        "type": "last_mile",
+        "delayMinutes": 0
+      },
+      {
+        "order": 6,
+        "message": "You have arrived at Tech Park Main Entrance. Journey complete! 🎉 Total time: 59 minutes.",
+        "type": "completed",
+        "delayMinutes": 0
+      }
+    ]
+  },
+  {
+    "patternId": "PAT-TRAIN-BUS",
+    "updates": [
+      {
+        "order": 1,
+        "message": "Local Train 47 arriving at Platform 1 in 6 minutes. Please proceed to the platform.",
+        "type": "arrival",
+        "delayMinutes": 0
+      },
+      {
+        "order": 2,
+        "message": "You are on board Local Train 47. Next major stop: City Bus Depot. Ride for 25 minutes.",
+        "type": "departure",
+        "delayMinutes": 0
+      },
+      {
+        "order": 3,
+        "message": "Alighting at City Bus Depot. Proceed to Bay 5 for Bus 241A.",
+        "type": "platform",
+        "delayMinutes": 0
+      },
+      {
+        "order": 4,
+        "message": "Bus 241A now boarding at Bay 5. This bus stops at Tech Park. Estimated 28 minutes.",
+        "type": "departure",
+        "delayMinutes": 0
+      },
+      {
+        "order": 5,
+        "message": "Approaching Tech Park Bus Stop. Prepare to alight. Walk 850m to main entrance.",
+        "type": "arrival",
+        "delayMinutes": 0
+      },
+      {
+        "order": 6,
+        "message": "You have arrived at Tech Park Main Entrance. Journey complete! 🎉 Total time: 68 minutes.",
+        "type": "completed",
+        "delayMinutes": 0
+      }
+    ]
+  },
+  {
+    "patternId": "PAT-AUTO-METRO",
+    "updates": [
+      {
+        "order": 1,
+        "message": "Auto confirmed. Driver heading to Central Station Auto Stand. ETA: 3 minutes.",
+        "type": "arrival",
+        "delayMinutes": 0
+      },
+      {
+        "order": 2,
+        "message": "You are on your way to Metro Central via auto. Estimated 12 minutes. Fare: ₹60.",
+        "type": "departure",
+        "delayMinutes": 0
+      },
+      {
+        "order": 3,
+        "message": "Arrived at Metro Central. Blue Line train on Platform 2, departing in 2 minutes.",
+        "type": "platform",
+        "delayMinutes": 0
+      },
+      {
+        "order": 4,
+        "message": "You are on board the Blue Line Metro. Destination: Tech Park. 22 minutes remaining.",
+        "type": "departure",
+        "delayMinutes": 0
+      },
+      {
+        "order": 5,
+        "message": "Arriving at Tech Park Metro Station. Walk 600m to Tech Park Main Entrance from Gate 1.",
+        "type": "arrival",
+        "delayMinutes": 0
+      },
+      {
+        "order": 6,
+        "message": "You have arrived at Tech Park Main Entrance. Journey complete! 🎉 Total time: 42 minutes.",
+        "type": "completed",
+        "delayMinutes": 0
+      }
+    ]
+  }
+]

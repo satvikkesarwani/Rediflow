@@ -1,0 +1,17 @@
+[
+  { "stopId": "STP001", "name": "Central Station Bus Stop – Bay 3", "locationId": "LOC001", "mode": "bus", "platform": "Bay 3", "gate": null },
+  { "stopId": "STP002", "name": "Central Station Train Platform 1", "locationId": "LOC001", "mode": "train", "platform": "Platform 1", "gate": null },
+  { "stopId": "STP003", "name": "Central Station Walk Exit", "locationId": "LOC001", "mode": "walk", "platform": null, "gate": "Main Gate" },
+  { "stopId": "STP004", "name": "Central Station Auto Stand", "locationId": "LOC001", "mode": "auto", "platform": null, "gate": "Gate A" },
+  { "stopId": "STP005", "name": "Metro Central Bus Stop", "locationId": "LOC002", "mode": "bus", "platform": "Bay 1", "gate": null },
+  { "stopId": "STP006", "name": "Metro Central Station – Platform 2", "locationId": "LOC002", "mode": "metro", "platform": "Platform 2", "gate": null },
+  { "stopId": "STP007", "name": "Metro Central Auto Stand", "locationId": "LOC002", "mode": "auto", "platform": null, "gate": "Exit B" },
+  { "stopId": "STP008", "name": "City Bus Depot – Bay 5", "locationId": "LOC003", "mode": "bus", "platform": "Bay 5", "gate": null },
+  { "stopId": "STP009", "name": "Tech Park Metro Station – Gate 1", "locationId": "LOC004", "mode": "metro", "platform": "Platform 1", "gate": "Gate 1" },
+  { "stopId": "STP010", "name": "Tech Park Bus Stop", "locationId": "LOC004", "mode": "bus", "platform": "Bay 2", "gate": null },
+  { "stopId": "STP011", "name": "Tech Park Main Entrance", "locationId": "LOC004", "mode": "walk", "platform": null, "gate": "Main Entrance" },
+  { "stopId": "STP012", "name": "University Campus Bus Stop", "locationId": "LOC005", "mode": "bus", "platform": "Bay 1", "gate": null },
+  { "stopId": "STP013", "name": "Residential Area North Bus Stop", "locationId": "LOC006", "mode": "bus", "platform": "Bay 2", "gate": null },
+  { "stopId": "STP014", "name": "Airport Road Metro Station – Gate 2", "locationId": "LOC007", "mode": "metro", "platform": "Platform 3", "gate": "Gate 2" },
+  { "stopId": "STP015", "name": "Shopping Mall Bus Stop", "locationId": "LOC008", "mode": "bus", "platform": "Bay 3", "gate": null }
+]

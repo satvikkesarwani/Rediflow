@@ -1,0 +1,66 @@
+[
+  {
+    "locationId": "LOC001",
+    "name": "Central Railway Station",
+    "type": "railway_station",
+    "latitude": 18.5294,
+    "longitude": 73.8742,
+    "availableModes": ["train", "bus", "auto", "walk"]
+  },
+  {
+    "locationId": "LOC002",
+    "name": "Metro Central",
+    "type": "metro_station",
+    "latitude": 18.5201,
+    "longitude": 73.8567,
+    "availableModes": ["metro", "bus", "auto", "walk"]
+  },
+  {
+    "locationId": "LOC003",
+    "name": "City Bus Depot",
+    "type": "bus_depot",
+    "latitude": 18.5158,
+    "longitude": 73.8431,
+    "availableModes": ["bus", "auto", "walk"]
+  },
+  {
+    "locationId": "LOC004",
+    "name": "Tech Park",
+    "type": "tech_hub",
+    "latitude": 18.5632,
+    "longitude": 73.9165,
+    "availableModes": ["metro", "bus", "auto", "cab", "walk"]
+  },
+  {
+    "locationId": "LOC005",
+    "name": "University Campus",
+    "type": "university",
+    "latitude": 18.4566,
+    "longitude": 73.8501,
+    "availableModes": ["bus", "auto", "walk"]
+  },
+  {
+    "locationId": "LOC006",
+    "name": "Residential Area North",
+    "type": "residential",
+    "latitude": 18.5890,
+    "longitude": 73.8822,
+    "availableModes": ["bus", "auto", "walk"]
+  },
+  {
+    "locationId": "LOC007",
+    "name": "Airport Road",
+    "type": "airport_road",
+    "latitude": 18.5788,
+    "longitude": 73.9094,
+    "availableModes": ["metro", "bus", "auto", "cab", "walk"]
+  },
+  {
+    "locationId": "LOC008",
+    "name": "Shopping Mall",
+    "type": "commercial",
+    "latitude": 18.5345,
+    "longitude": 73.8901,
+    "availableModes": ["bus", "metro", "auto", "cab", "walk"]
+  }
+]

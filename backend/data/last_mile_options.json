@@ -1,0 +1,47 @@
+[
+  {
+    "optionId": "LM001",
+    "fromLocationId": "LOC004",
+    "mode": "auto",
+    "provider": "Local Auto",
+    "estimatedFareRupees": 32,
+    "estimatedDurationMinutes": 8,
+    "availabilityStatus": "Available"
+  },
+  {
+    "optionId": "LM002",
+    "fromLocationId": "LOC004",
+    "mode": "cab",
+    "provider": "City Cab",
+    "estimatedFareRupees": 75,
+    "estimatedDurationMinutes": 6,
+    "availabilityStatus": "Available"
+  },
+  {
+    "optionId": "LM003",
+    "fromLocationId": "LOC002",
+    "mode": "auto",
+    "provider": "Local Auto",
+    "estimatedFareRupees": 45,
+    "estimatedDurationMinutes": 10,
+    "availabilityStatus": "Available"
+  },
+  {
+    "optionId": "LM004",
+    "fromLocationId": "LOC001",
+    "mode": "auto",
+    "provider": "Local Auto",
+    "estimatedFareRupees": 60,
+    "estimatedDurationMinutes": 12,
+    "availabilityStatus": "Available"
+  },
+  {
+    "optionId": "LM005",
+    "fromLocationId": "LOC007",
+    "mode": "cab",
+    "provider": "City Cab",
+    "estimatedFareRupees": 95,
+    "estimatedDurationMinutes": 15,
+    "availabilityStatus": "Available"
+  }
+]
