@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { api } from '../services/api';
 import { ArrowLeft, CheckCircle, XCircle, Ticket, Wallet, CreditCard, Lock } from 'lucide-react';
 
-export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
-  const [walletBalance] = useState(500);
+export function PaymentScreen({ booking, route, onSuccess, onBack, addToast, walletBalance, setWalletBalance }) {
   const [state, setState] = useState('idle'); // idle | paying | success | failed
   const [result, setResult] = useState(null);
 
@@ -14,6 +13,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
       if (data.paymentStatus === 'Success') {
         setResult(data);
         setState('success');
+        if (setWalletBalance) setWalletBalance(data.walletBalance);
         addToast('Payment successful!', 'success');
       } else {
         setResult(data);
@@ -43,7 +43,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
           <div style={{ background: 'white', borderRadius: 20, padding: '24px', marginTop: 32, marginBottom: 32, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
             <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 12, color: '#94A3B8', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Journey Pass ID</div>
-              <div style={{ fontFamily: 'monospace', fontSize: 20, fontWeight: 800, color: '#4f46e5' }}>{result.journeyPassId}</div>
+              <div style={{ fontFamily: 'monospace', fontSize: 20, fontWeight: 800, color: 'var(--primary)' }}>{result.journeyPassId}</div>
             </div>
             
             <div style={{ height: 1, background: '#f1f5f9', margin: '16px 0' }} />
@@ -83,7 +83,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
           <div style={{ background: 'white', padding: '16px', borderRadius: 16, marginTop: 16, border: '1px solid #e2e8f0' }}>
             <p style={{ color: '#475569', fontSize: 14 }}>
               Required: <span style={{ fontWeight: 700 }}>₹{booking.totalFareRupees}</span><br />
-              Current Balance: <span style={{ fontWeight: 700, color: '#ef4444' }}>₹{result?.walletBalance || walletBalance}</span>
+              Current Balance: <span style={{ fontWeight: 700, color: '#ef4444' }}>₹{result?.walletBalance ?? walletBalance}</span>
             </p>
           </div>
           <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
@@ -104,28 +104,28 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
     <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
-        padding: '24px 20px', color: 'white',
+        background: 'linear-gradient(160deg, #ecfdf5 0%, #d1fae5 100%)',
+        padding: '20px 20px 28px', color: '#065f46',
       }}>
         <button
           onClick={onBack}
-          style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '8px 12px', borderRadius: 10, cursor: 'pointer', fontSize: 13, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6, transition: 'background 0.2s' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(6,95,70,0.1)', border: 'none', color: '#065f46', padding: '8px 14px', borderRadius: 20, cursor: 'pointer', fontSize: 13, fontWeight: 600, marginBottom: 20 }}
         >
-          <ArrowLeft size={16} /> Back
+          <ArrowLeft size={15} /> Back
         </button>
         <h2 style={{ fontSize: 22, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 8 }}>
           <Wallet size={24} /> NCMC Wallet
         </h2>
       </div>
 
-      <div style={{ padding: '24px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div style={{ padding: '24px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 24, overflowY: 'auto' }}>
         {/* Wallet balance */}
         <div
           className="card animate-fade-in-up"
-          style={{ textAlign: 'center', padding: '32px 20px', background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)', border: '1px solid #c7d2fe' }}
+          style={{ textAlign: 'center', padding: '32px 20px', background: 'linear-gradient(135deg, #f0fdf9, #dcfce7)', border: '1px solid #a7f3d0' }}
         >
-          <p style={{ fontSize: 13, color: '#4f46e5', fontWeight: 700, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
-          <p style={{ fontSize: 52, fontWeight: 800, color: '#312e81' }}>₹{walletBalance}</p>
+          <p style={{ fontSize: 13, color: 'var(--primary)', fontWeight: 700, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
+          <p style={{ fontSize: 52, fontWeight: 800, color: '#065f46' }}>₹{walletBalance}</p>
         </div>
 
         {/* Payment details */}
@@ -139,7 +139,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
             <div style={{ height: 1, background: '#F1F5F9', margin: '4px 0' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>Amount to Pay</span>
-              <span style={{ fontSize: 24, fontWeight: 800, color: '#4f46e5' }}>₹{booking.totalFareRupees}</span>
+              <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--primary)' }}>₹{booking.totalFareRupees}</span>
             </div>
           </div>
         </div>
@@ -151,13 +151,13 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
       </div>
 
       {/* Pay CTA */}
-      <div style={{ padding: '20px', background: 'white', borderTop: '1px solid #e2e8f0' }}>
+      <div style={{ padding: '16px 20px 20px' }}>
         <button
           className="btn-primary"
           id="pay-btn"
           onClick={handlePay}
           disabled={state === 'paying'}
-          style={{ background: state === 'paying' ? 'linear-gradient(135deg, #6366F1, #4F46E5)' : undefined }}
+          style={{ borderRadius: 50 }}
         >
           {state === 'paying' ? <><div className="spinner" /> Processing...</> : <><CreditCard size={20} /> Pay ₹{booking.totalFareRupees}</>}
         </button>

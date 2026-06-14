@@ -1,4 +1,5 @@
 import random
+from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from app.models.payment_models import PaymentRequest, PaymentSuccessResponse, PaymentFailureResponse
@@ -66,6 +67,16 @@ def pay(req: PaymentRequest):
         walletBalance=wallet_balances[user_id],
     )
 
+
+class AddMoneyRequest(BaseModel):
+    amountRupees: int
+    userId: str = "demo-user"
+
+@router.post("/wallet/add")
+def add_money(req: AddMoneyRequest):
+    balance = wallet_balances.get(req.userId, 500)
+    wallet_balances[req.userId] = balance + req.amountRupees
+    return {"userId": req.userId, "balance": wallet_balances[req.userId]}
 
 @router.get("/wallet/balance")
 def get_balance(userId: str = "demo-user"):

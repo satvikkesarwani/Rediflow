@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { PreferenceSelector } from '../components/PreferenceSelector';
-import { Train, MapPin, Search, Navigation, Wallet } from 'lucide-react';
-
-const QUICK_ROUTES = [
-  { source: 'Central Railway Station', destination: 'Tech Park' },
-  { source: 'Residential Area North', destination: 'University Campus' },
-];
+import { Wallet, MapPin, ChevronRight, ChevronDown, Train, Bus, Car, Footprints } from 'lucide-react';
 
 export function HomeScreen({ onSearch, onOpenWallet, addToast }) {
   const [locations, setLocations] = useState([]);
@@ -14,26 +9,30 @@ export function HomeScreen({ onSearch, onOpenWallet, addToast }) {
   const [destination, setDestination] = useState('');
   const [preference, setPreference] = useState('balanced');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     api.getLocations()
-      .then((data) => setLocations(data.locations || []))
+      .then((data) => {
+        const locs = data.locations || [];
+        setLocations(locs);
+        if (locs.length >= 2) {
+          setSource(locs[0].name);
+          const techPark = locs.find(l => l.name.toLowerCase() === 'tech park');
+          setDestination(techPark ? techPark.name : locs[1].name);
+        }
+      })
       .catch(() => addToast('Could not load locations', 'error'));
   }, []);
 
-  const validate = () => {
-    const errs = {};
-    if (!source) errs.source = 'Please select a source';
-    if (!destination) errs.destination = 'Please select a destination';
-    if (source && destination && source === destination)
-      errs.destination = 'Source and destination must be different';
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
   const handleSearch = async () => {
-    if (!validate()) return;
+    if (!source || !destination) {
+      addToast('Please select source and destination', 'error');
+      return;
+    }
+    if (source === destination) {
+      addToast('Source and destination cannot be the same', 'error');
+      return;
+    }
     setLoading(true);
     try {
       const data = await api.searchRoutes(source, destination, preference);
@@ -45,141 +44,203 @@ export function HomeScreen({ onSearch, onOpenWallet, addToast }) {
     }
   };
 
-  const quickFill = (s, d) => { setSource(s); setDestination(d); setErrors({}); };
+  const selectStyle = {
+    width: '100%',
+    border: 'none',
+    fontSize: 16,
+    fontWeight: 600,
+    color: '#0F172A',
+    outline: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+    appearance: 'none',
+    WebkitAppearance: 'none',
+  };
 
   return (
-    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      {/* Hero header */}
-      <div style={{
-        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
-        padding: '56px 24px 40px',
-        color: 'white',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* Top-Right Wallet Button */}
-        <button 
-          onClick={onOpenWallet}
-          style={{ position: 'absolute', top: 24, right: 24, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, transition: 'background 0.2s' }}
-        >
-          <Wallet size={20} />
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'white' }}>
+      
+      {/* App Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px 24px 16px', zIndex: 10, background: 'white' }}>
+        <div style={{ width: 24 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.5px' }}>
+          <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
+            <MapPin size={22} strokeWidth={2.5} />
+          </div>
+          RideFlow
+        </div>
+        <button style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={onOpenWallet}>
+          <Wallet size={24} color="#0F172A" />
         </button>
-
-        <div style={{
-          position: 'absolute', top: -40, right: -40,
-          width: 200, height: 200, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0) 70%)',
-        }} />
-
-        <Train size={42} strokeWidth={1.5} style={{ marginBottom: 16, color: '#818cf8' }} />
-        <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 8, letterSpacing: '-1px' }}>RideFlow</h1>
-        <p style={{ fontSize: 15, opacity: 0.8, lineHeight: 1.5, maxWidth: 300, fontWeight: 400 }}>
-          Smart multi-modal journeys for every commuter.
-        </p>
       </div>
 
-      {/* Form */}
-      <div style={{ padding: '32px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* Hero Content */}
+      <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Hero — white background, illustration on the right, text on the left */}
+        <div style={{
+          position: 'relative',
+          height: 220,
+          background: '#f0f7f4',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'flex-start',
+          padding: '28px 24px 0',
+        }}>
+          {/* Illustration — right-side only */}
+          <div style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '65%',
+            backgroundImage: 'url(/src/assets/hero-bg.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 55%',
+            backgroundRepeat: 'no-repeat',
+          }} />
+          {/* Gradient fade: illustration bleeds into bg from left */}
+          <div style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '65%',
+            background: 'linear-gradient(to right, #f0f7f4 0%, #f0f7f450 30%, transparent 60%)',
+          }} />
 
-        {/* Source */}
-        <div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>
-            <MapPin size={16} /> Where are you?
-          </label>
-          <select
-            id="source-select"
-            value={source}
-            onChange={(e) => { setSource(e.target.value); setErrors({}); }}
-            style={{
-              width: '100%', padding: '14px 16px', borderRadius: 14,
-              border: `1px solid ${errors.source ? '#EF4444' : '#cbd5e1'}`,
-              fontSize: 15, color: source ? '#0F172A' : '#94A3B8',
-              background: '#f8fafc', outline: 'none',
-              appearance: 'none', cursor: 'pointer',
-              transition: 'border-color 0.2s',
-            }}
-          >
-            <option value="">Select source location</option>
-            {locations.map((l) => (
-              <option key={l.locationId} value={l.name}>{l.name}</option>
-            ))}
-          </select>
-          {errors.source && <p style={{ color: '#EF4444', fontSize: 12, marginTop: 6 }}>{errors.source}</p>}
+          {/* Title — left side, clearly readable on light bg */}
+          <h1 style={{
+            position: 'relative',
+            zIndex: 2,
+            fontSize: 30,
+            fontWeight: 900,
+            color: '#0F172A',
+            lineHeight: 1.2,
+            maxWidth: 175,
+            margin: 0,
+            letterSpacing: '-0.5px',
+          }}>
+            Plan your<br />journey
+          </h1>
         </div>
 
-        {/* Destination */}
-        <div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 8 }}>
-            <Navigation size={16} /> Where do you want to go?
-          </label>
-          <select
-            id="destination-select"
-            value={destination}
-            onChange={(e) => { setDestination(e.target.value); setErrors({}); }}
-            style={{
-              width: '100%', padding: '14px 16px', borderRadius: 14,
-              border: `1px solid ${errors.destination ? '#EF4444' : '#cbd5e1'}`,
-              fontSize: 15, color: destination ? '#0F172A' : '#94A3B8',
-              background: '#f8fafc', outline: 'none',
-              appearance: 'none', cursor: 'pointer',
-              transition: 'border-color 0.2s',
-            }}
-          >
-            <option value="">Select destination</option>
-            {locations.map((l) => (
-              <option key={l.locationId} value={l.name}>{l.name}</option>
-            ))}
-          </select>
-          {errors.destination && <p style={{ color: '#EF4444', fontSize: 12, marginTop: 6 }}>{errors.destination}</p>}
-        </div>
+        {/* Main Card — overlaps hero from below */}
+        <div style={{ 
+          background: 'white', 
+          borderRadius: 24, 
+          margin: '-28px 16px 24px', 
+          padding: '24px 20px', 
+          boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 24,
+          position: 'relative',
+          zIndex: 10
+        }}>
+          
+          {/* From / To Dropdowns */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
+            {/* Timeline connection line */}
+            <div style={{ position: 'absolute', left: 11, top: 24, bottom: 24, width: 2, background: '#E2E8F0', zIndex: 0 }} />
+            
+            {/* From */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, position: 'relative', zIndex: 1 }}>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'white' }} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
+                <div style={{ fontSize: 13, color: '#64748B', fontWeight: 600, marginBottom: 2 }}>From</div>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <select
+                    value={source}
+                    onChange={(e) => setSource(e.target.value)}
+                    style={selectStyle}
+                  >
+                    <option value="" disabled>Select departure</option>
+                    {locations.map((loc) => (
+                      <option key={loc.locationId} value={loc.name}>{loc.name}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={16} color="#94A3B8" style={{ flexShrink: 0, pointerEvents: 'none', marginLeft: -20 }} />
+                </div>
+              </div>
+            </div>
 
-        {/* Preference */}
-        <div>
-          <label style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 12, display: 'block' }}>
-            Route preference
-          </label>
-          <PreferenceSelector value={preference} onChange={setPreference} />
-        </div>
+            <div style={{ height: 1, background: '#F1F5F9', marginLeft: 40 }} />
 
-        {/* CTA */}
-        <button
-          id="find-routes-btn"
-          className="btn-primary"
-          onClick={handleSearch}
-          disabled={loading}
-          style={{ marginTop: 8 }}
-        >
-          {loading ? (
-            <><div className="spinner" /> Planning...</>
-          ) : (
-            <><Search size={20} /> Find Routes</>
-          )}
-        </button>
-
-        {/* Quick routes */}
-        <div style={{ marginTop: 8 }}>
-          <p style={{ fontSize: 12, color: '#94A3B8', fontWeight: 600, marginBottom: 12, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-            Popular routes
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {QUICK_ROUTES.map((r, i) => (
-              <button
-                key={i}
-                onClick={() => quickFill(r.source, r.destination)}
-                style={{
-                  padding: '12px 16px', borderRadius: 12,
-                  border: '1px solid #e2e8f0', background: 'white',
-                  fontSize: 14, color: '#334155', fontWeight: 500,
-                  cursor: 'pointer', textAlign: 'left',
-                  transition: 'all 0.15s ease',
-                  display: 'flex', alignItems: 'center', gap: 10,
-                }}
-              >
-                <MapPin size={16} color="#818cf8" />
-                <span>{r.source} <span style={{color: '#94a3b8', margin: '0 4px'}}>→</span> {r.destination}</span>
-              </button>
-            ))}
+            {/* To */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, position: 'relative', zIndex: 1 }}>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <MapPin size={14} color="white" fill="white" />
+              </div>
+              <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
+                <div style={{ fontSize: 13, color: '#64748B', fontWeight: 600, marginBottom: 2 }}>To</div>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <select
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    style={selectStyle}
+                  >
+                    <option value="" disabled>Select destination</option>
+                    {locations.map((loc) => (
+                      <option key={loc.locationId} value={loc.name}>{loc.name}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={16} color="#94A3B8" style={{ flexShrink: 0, pointerEvents: 'none', marginLeft: -20 }} />
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div style={{ height: 1, background: '#F1F5F9' }} />
+
+          {/* Preferences */}
+          <div>
+            <div style={{ fontSize: 14, color: '#64748B', fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              Route preference <span style={{ width: 16, height: 16, borderRadius: '50%', border: '1.5px solid #94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#94A3B8', fontWeight: 700 }}>i</span>
+            </div>
+            <PreferenceSelector value={preference} onChange={setPreference} />
+          </div>
+
+          {/* Transport Modes */}
+          <div>
+            <div style={{ fontSize: 13, color: '#94A3B8', fontWeight: 600, marginBottom: 14, textAlign: 'center', letterSpacing: '0.3px' }}>Available modes</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 4px' }}>
+              {[
+                { icon: <Train size={22} />, label: 'Metro' },
+                { icon: <Bus size={22} />, label: 'Bus' },
+                { icon: <Train size={22} strokeWidth={1.8} />, label: 'Train' },
+                { icon: <Car size={22} />, label: 'Auto' },
+                { icon: <Footprints size={22} />, label: 'Walk' },
+              ].map(m => (
+                <div key={m.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7 }}>
+                  <div style={{
+                    width: 50, height: 50, borderRadius: '50%',
+                    background: '#f0fdf9',
+                    color: 'var(--primary)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    {m.icon}
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#475569' }}>{m.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            className="btn-primary"
+            onClick={handleSearch}
+            disabled={loading}
+            style={{ marginTop: 8, justifyContent: 'space-between', padding: '14px 14px 14px 24px' }}
+          >
+            {loading ? <div className="spinner" /> : <span style={{ fontSize: 18, fontWeight: 700 }}>Find Routes</span>}
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <ChevronRight size={20} color="var(--primary)" strokeWidth={3} />
+            </div>
+          </button>
+
         </div>
       </div>
     </div>

@@ -79,7 +79,7 @@ def compute_route_labels(routes: list[dict], legs_map: dict) -> list[dict]:
 
 
 def score_and_rank(routes: list[dict], preference: str, legs_map: dict) -> list[dict]:
-    """Score, rank, and tag routes based on user preference."""
+    """Score, rank, and tag routes based on user preference, returning exactly 4 options."""
     preference = preference.lower().replace("-", "_")
     if preference not in PREFERENCE_WEIGHTS:
         preference = "balanced"
@@ -119,36 +119,61 @@ def score_and_rank(routes: list[dict], preference: str, legs_map: dict) -> list[
         r["score"] = round(score, 4)
         scored.append(r)
 
+    # Sort routes by score so scored[0] is the absolute best for the current preference
     scored.sort(key=lambda r: r["score"])
 
-    # Assign tags
-    tagged_ids = set()
-    # Rank 1 by score = Recommended
-    scored[0]["tag"] = "Recommended"
-    tagged_ids.add(scored[0]["routeId"])
+    # Define preference string to display tag mapping
+    PREF_TO_TAG = {
+        "balanced": "Balanced",
+        "fastest": "Fastest",
+        "cheapest": "Cheapest",
+        "least_walking": "Less Walking",
+        "fewest_transfers": "Fewer Transfers",
+        "eco_friendly": "Eco-Friendly"
+    }
 
-    # Cheapest
-    cheapest = min(scored, key=lambda r: r["totalFareRupees"])
-    if cheapest["routeId"] not in tagged_ids:
-        cheapest["tag"] = "Cheapest"
-        tagged_ids.add(cheapest["routeId"])
+    top_tag = PREF_TO_TAG.get(preference, "Balanced")
+    
+    # We want exactly 4 routes in a specific tag order.
+    desired_tags_order = [top_tag]
+    for fallback in ["Balanced", "Cheapest", "Fastest", "Alternative"]:
+        if fallback not in desired_tags_order and len(desired_tags_order) < 4:
+            desired_tags_order.append(fallback)
 
-    # Fastest
-    fastest = min(scored, key=lambda r: r["totalTimeMinutes"])
-    if fastest["routeId"] not in tagged_ids:
-        fastest["tag"] = "Fastest"
-        tagged_ids.add(fastest["routeId"])
+    def get_best_for_tag(pool, tag):
+        if not pool:
+            return None
+        if tag == "Balanced":
+            return min(pool, key=lambda r: r["score"])
+        elif tag == "Fastest":
+            return min(pool, key=lambda r: r["totalTimeMinutes"])
+        elif tag == "Cheapest":
+            return min(pool, key=lambda r: r["totalFareRupees"])
+        elif tag == "Less Walking":
+            return min(pool, key=lambda r: r["totalWalkingMeters"])
+        elif tag == "Fewer Transfers":
+            return min(pool, key=lambda r: r["transferCount"])
+        elif tag == "Eco-Friendly":
+            return min(pool, key=lambda r: (0 if r["carbonLabel"] == "Low" else 1 if r["carbonLabel"] == "Medium" else 2))
+        else: # Alternative
+            return pool[0]
 
-    # Eco-Friendly
-    eco = min(scored, key=lambda r: r["totalFareRupees"] if r["carbonLabel"] == "Low" else 9999)
-    eco_route = min(scored, key=lambda r: (0 if r["carbonLabel"] == "Low" else 1 if r["carbonLabel"] == "Medium" else 2))
-    if eco_route["routeId"] not in tagged_ids:
-        eco_route["tag"] = "Eco-Friendly"
-        tagged_ids.add(eco_route["routeId"])
+    selected_routes = []
+    used_route_ids = set()
 
-    # Any untagged routes get a generic tag
-    for r in scored:
-        if r["routeId"] not in tagged_ids:
-            r["tag"] = "Alternative"
+    for tag in desired_tags_order:
+        pool = [r for r in scored if r["routeId"] not in used_route_ids]
+        if not pool:
+            break
+        
+        if tag == top_tag:
+            best_route = pool[0]
+        else:
+            best_route = get_best_for_tag(pool, tag)
+            
+        r = dict(best_route)
+        r["tag"] = tag
+        selected_routes.append(r)
+        used_route_ids.add(r["routeId"])
 
-    return scored
+    return selected_routes

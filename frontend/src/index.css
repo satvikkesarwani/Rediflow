@@ -1,12 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 :root {
-  --primary: #3730A3;
-  --primary-light: #4F46E5;
-  --primary-dark: #2E27A3;
-  --accent: #F59E0B;
+  --primary: #008B74;
+  --primary-light: #059669;
+  --primary-dark: #047857;
+  --accent: #0D9488;
   --success: #10B981;
   --error: #EF4444;
   --warning: #F59E0B;
@@ -16,10 +15,10 @@
   --text-secondary: #64748B;
 
   /* mode colors */
-  --walk: #94A3B8;
+  --walk: #10B981;
   --bus: #3B82F6;
-  --metro: #4F46E5;
-  --train: #7C3AED;
+  --metro: #008B74;
+  --train: #0F766E;
   --auto: #F59E0B;
   --cab: #F97316;
   --bike: #22C55E;
@@ -67,9 +66,21 @@ body {
     height: 896px;
     min-height: auto;
     border-radius: 40px;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 12px #1e293b, inset 0 0 0 4px #0f172a;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 12px #1e293b;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+  .app-shell::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 40px;
+    box-shadow: inset 0 0 0 4px #0f172a;
+    pointer-events: none;
+    z-index: 999;
   }
 }
 
@@ -209,11 +220,11 @@ body {
 /* Buttons */
 .btn-primary {
   width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #4F46E5, #3730A3);
+  padding: 16px;
+  background: var(--primary);
   color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 9999px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -222,12 +233,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 15px rgba(79,70,229,0.35);
+  box-shadow: 0 4px 15px rgba(0, 139, 116, 0.25);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(79,70,229,0.45);
+  box-shadow: 0 6px 20px rgba(0, 139, 116, 0.35);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -278,4 +289,11 @@ body {
 /* Screen transitions */
 .screen-enter {
   animation: fadeInUp 0.35s ease both;
+}
+
+@media (min-width: 640px) {
+  .screen-enter {
+    border-radius: 40px;
+    overflow: hidden;
+  }
 }

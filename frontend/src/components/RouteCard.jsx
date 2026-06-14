@@ -1,116 +1,132 @@
-import { Star, Zap, Banknote, Leaf, Shuffle, Clock, Footprints, Shield, Wifi, Train, Bus, Car, Bike, ChevronRight } from 'lucide-react';
+import { Star, Zap, Banknote, Leaf, Shuffle, Footprints, Train, Bus, Car, Bike, ArrowRight } from 'lucide-react';
 
 const MODE_ICONS = {
-  walk: <Footprints size={14} />,
-  bus: <Bus size={14} />,
-  metro: <Train size={14} />,
-  train: <Train size={14} />,
-  auto: <Car size={14} />,
-  cab: <Car size={14} />,
-  bike: <Bike size={14} />,
+  walk: <Footprints size={24} />,
+  bus: <Bus size={24} />,
+  metro: <Train size={24} />,
+  train: <Train size={24} />,
+  auto: <Car size={24} />,
+  cab: <Car size={24} />,
+  bike: <Bike size={24} />,
+};
+
+const getModeColor = (mode) => {
+  const colors = {
+    walk: '#10B981', bus: '#3B82F6', metro: '#008B74',
+    train: '#0F766E', auto: '#F59E0B', cab: '#F97316', bike: '#22C55E',
+  };
+  return colors[mode] || '#64748B';
 };
 
 const TAG_CONFIG = {
-  Recommended: { label: 'RECOMMENDED', icon: <Star size={14} />, bg: '#EEF2FF', color: '#4F46E5', border: '#4F46E5' },
-  Fastest: { label: 'FASTEST', icon: <Zap size={14} />, bg: '#FFFBEB', color: '#D97706', border: '#F59E0B' },
-  Cheapest: { label: 'CHEAPEST', icon: <Banknote size={14} />, bg: '#ECFDF5', color: '#059669', border: '#10B981' },
-  'Eco-Friendly': { label: 'ECO-FRIENDLY', icon: <Leaf size={14} />, bg: '#F0FDF4', color: '#15803D', border: '#22C55E' },
-  Alternative: { label: 'ALTERNATIVE', icon: <Shuffle size={14} />, bg: '#F1F5F9', color: '#475569', border: '#94A3B8' },
+  Balanced: { label: 'Recommended', icon: <Star size={12} fill="currentColor" />, bg: '#ECFDF5', color: '#059669', border: '#34D399' },
+  Fastest: { label: 'Fastest', icon: <Zap size={12} fill="currentColor" />, bg: '#FFFBEB', color: '#D97706', border: '#FCD34D' },
+  Cheapest: { label: 'Cheapest', icon: null, bg: '#F0FDF4', color: '#166534', border: '#86EFAC' },
+  'Eco-Friendly': { label: 'Eco-Friendly', icon: <Leaf size={12} fill="currentColor" />, bg: '#F0FDF4', color: '#15803D', border: '#86EFAC' },
+  'Less Walking': { label: 'Least Walking', icon: null, bg: '#EFF6FF', color: '#1D4ED8', border: '#93C5FD' },
+  'Fewer Transfers': { label: 'Fewer Transfers', icon: null, bg: '#FFF1F2', color: '#BE123C', border: '#FDA4AF' },
+  Alternative: { label: 'Alternative', icon: null, bg: '#F8FAFC', color: '#475569', border: '#CBD5E1' },
 };
 
-export function RouteCard({ route, onClick, delay = 0 }) {
+const BADGE_COLORS = ['#008B74', '#10B981', '#3B82F6', '#F59E0B'];
+
+export function RouteCard({ route, index = 0, onClick, delay = 0 }) {
   const tag = TAG_CONFIG[route.tag] || TAG_CONFIG['Alternative'];
   const modes = route.summary.split(' → ');
+  const letterBadge = String.fromCharCode(65 + (index % 26));
+  const badgeColor = BADGE_COLORS[index % BADGE_COLORS.length];
 
   return (
     <div
       className="card cursor-pointer animate-fade-in-up"
       style={{
-        borderLeft: `6px solid ${tag.border}`,
-        padding: '28px 20px',
+        padding: 0,
         animationDelay: `${delay}ms`,
         borderRadius: '16px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+        border: `1.5px solid ${badgeColor}`,
+        boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+        overflow: 'hidden',
+        position: 'relative'
       }}
       onClick={onClick}
     >
-      {/* Tag */}
-      <div className="flex flex-wrap items-center justify-between gap-2" style={{ marginBottom: '24px' }}>
-        <span style={{ background: tag.bg, color: tag.color, border: `1px solid ${tag.color}30`, padding: '6px 14px', borderRadius: '24px', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, letterSpacing: '0.5px' }}>
-          {tag.icon} {tag.label}
-        </span>
-        <span style={{ background: '#EEF2FF', color: '#4F46E5', padding: '6px 14px', borderRadius: '24px', fontSize: 13, fontWeight: 700 }}>
-          Score {route.score}
-        </span>
+      {/* Letter Badge */}
+      <div style={{
+        position: 'absolute',
+        left: 0, top: 0,
+        background: badgeColor,
+        color: 'white',
+        width: 36, height: 36,
+        borderBottomRightRadius: 16,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontWeight: 700, fontSize: 16
+      }}>
+        {letterBadge}
       </div>
 
-      {/* Mode sequence */}
-      <div className="flex items-center gap-y-3 gap-x-2 flex-wrap" style={{ marginBottom: '28px' }}>
+      <div style={{ padding: '16px 20px 16px 52px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#0F172A', paddingTop: 2 }}>
+          {route.summary}
+        </div>
+        <div style={{
+          background: tag.bg, color: tag.color, border: `1px solid ${tag.border}`,
+          padding: '4px 10px', borderRadius: 16, fontSize: 12, fontWeight: 600,
+          display: 'flex', alignItems: 'center', gap: 4
+        }}>
+          {tag.label} {tag.icon}
+        </div>
+      </div>
+
+      {/* Mode Icons */}
+      <div style={{ padding: '0 20px', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         {modes.map((m, i) => {
           const key = m.trim().toLowerCase();
+          const color = getModeColor(key);
           return (
-            <span key={i} className="flex items-center gap-2">
-              <span
-                style={{ background: getModeColor(key), color: 'white', padding: '6px 14px', borderRadius: '20px', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}
-              >
-                {MODE_ICONS[key]} {m.trim()}
-              </span>
-              {i < modes.length - 1 && <ChevronRight size={18} color="#94A3B8" />}
-            </span>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ color: color, display: 'flex', alignItems: 'center' }}>
+                {MODE_ICONS[key]}
+              </div>
+              {i < modes.length - 1 && <ArrowRight size={18} color="#94A3B8" />}
+            </div>
           );
         })}
       </div>
 
-      {/* Core metrics */}
-      <div className="grid grid-cols-4 gap-3" style={{ marginBottom: '24px' }}>
-        <MetricBox icon={<Clock size={15} />} label="Time" value={`${route.totalTimeMinutes} min`} />
-        <MetricBox icon={<Banknote size={15} />} label="Fare" value={`₹${route.totalFareRupees}`} />
-        <MetricBox icon={<Shuffle size={15} />} label="Transfers" value={`${route.transferCount}`} />
-        <MetricBox icon={<Footprints size={15} />} label="Walking" value={`${route.walkingDistanceMeters} m`} />
+      {/* Metrics Grid */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        padding: '0 20px 20px',
+        alignItems: 'center'
+      }}>
+        <MetricCol value={`${route.totalTimeMinutes} min`} label="Total time" />
+        <div style={{ width: 1, height: 32, background: '#E2E8F0' }} />
+        <MetricCol value={`₹${route.totalFareRupees}`} label="Fare" />
+        <div style={{ width: 1, height: 32, background: '#E2E8F0' }} />
+        <MetricCol value={route.transferCount} label="Transfers" />
+        <div style={{ width: 1, height: 32, background: '#E2E8F0' }} />
+        <MetricCol value={`${route.walkingDistanceMeters > 1000 ? (route.walkingDistanceMeters/1000).toFixed(1) + ' km' : route.walkingDistanceMeters + ' m'}`} label="Walk" />
       </div>
 
-      {/* Labels row & CTA */}
-      <div className="flex flex-wrap items-center justify-between gap-y-4" style={{ borderTop: '1px solid #F1F5F9', paddingTop: '24px' }}>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-3 flex-1 min-w-0 pr-2">
-          <LabelPill icon={<Leaf size={15} />} text={`${route.carbonLabel} carbon`} color={route.carbonLabel === 'Low' ? '#10B981' : route.carbonLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
-          <LabelPill icon={<Shield size={15} />} text={`${route.safetyLabel} safety`} color={route.safetyLabel === 'High' ? '#10B981' : route.safetyLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
-          <LabelPill icon={<Wifi size={15} />} text={`${route.reliabilityLabel} reliability`} color={route.reliabilityLabel === 'High' ? '#10B981' : route.reliabilityLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
-        </div>
-        <div style={{ color: '#4F46E5', fontSize: 14, fontWeight: 700, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-          View Route <span style={{ fontSize: 18 }}>→</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MetricBox({ icon, label, value }) {
-  return (
-    <div style={{ background: '#F8FAFC', borderRadius: '12px', padding: '12px 10px', minWidth: 0, overflow: 'hidden' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#64748B', marginBottom: 6 }}>
-        <span className="flex-shrink-0">{icon}</span>
-        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
-      </div>
-      <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {value}
+      {/* Carbon Footer */}
+      <div style={{ 
+        borderTop: '1px solid #E2E8F0', 
+        padding: '12px 20px',
+        display: 'flex', alignItems: 'center', gap: 6,
+        color: '#059669', fontSize: 13, fontWeight: 600
+      }}>
+        <Leaf size={16} fill="currentColor" /> Carbon: {route.carbonLabel}
       </div>
     </div>
   );
 }
 
-function LabelPill({ icon, text, color }) {
+function MetricCol({ value, label }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color, fontWeight: 600, minWidth: 0, overflow: 'hidden' }}>
-      <span className="flex-shrink-0 flex items-center">{icon}</span>
-      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}</span>
-    </span>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+      <div style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>{value}</div>
+      <div style={{ fontSize: 12, color: '#64748B', fontWeight: 500 }}>{label}</div>
+    </div>
   );
-}
-
-function getModeColor(mode) {
-  const colors = {
-    walk: '#94A3B8', bus: '#3B82F6', metro: '#6D28D9', // Deep purple for metro
-    train: '#7C3AED', auto: '#F59E0B', cab: '#F97316', bike: '#22C55E',
-  };
-  return colors[mode] || '#64748B';
 }

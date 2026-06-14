@@ -3,12 +3,12 @@ import { api } from '../services/api';
 import { Bus, Rocket, MapPin, Clock, Car, PartyPopper, Train, Map, AlertTriangle, Check, Bell, Hourglass, Ticket } from 'lucide-react';
 
 const UPDATE_TYPE_CONFIG = {
-  arrival: { icon: <Bus size={16} />, color: '#3B82F6' },
-  departure: { icon: <Rocket size={16} />, color: '#4F46E5' },
-  platform: { icon: <MapPin size={16} />, color: '#7C3AED' },
+  arrival: { icon: <Bus size={16} />, color: '#10B981' },
+  departure: { icon: <Rocket size={16} />, color: '#059669' },
+  platform: { icon: <MapPin size={16} />, color: '#0D9488' },
   delay: { icon: <Clock size={16} />, color: '#F59E0B' },
-  last_mile: { icon: <Car size={16} />, color: '#F59E0B' },
-  completed: { icon: <PartyPopper size={16} />, color: '#10B981' },
+  last_mile: { icon: <Car size={16} />, color: '#10B981' },
+  completed: { icon: <PartyPopper size={16} />, color: '#008B74' },
 };
 
 const MODE_ICONS = { 
@@ -97,11 +97,11 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
           <h2 style={{ fontSize: 28, fontWeight: 800, color: '#065F46', marginBottom: 8 }}>Journey Complete!</h2>
           <p style={{ color: '#047857', fontSize: 15, marginBottom: 8 }}>You have arrived at your destination.</p>
           <div style={{ background: 'white', padding: '16px', borderRadius: 16, marginTop: 24, marginBottom: 32, boxShadow: '0 4px 12px rgba(0,0,0,0.05)', border: '1px solid #d1fae5' }}>
-            <p style={{ color: '#047857', fontSize: 13, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ color: '#047857', fontSize: 13, display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>Booking ID:</span> <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{booking.bookingId}</span></span>
               <div style={{ height: 1, background: '#e5e7eb' }} />
               <span style={{ display: 'flex', justifyContent: 'space-between' }}><span>Journey Pass:</span> <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{passData.journeyPassId}</span></span>
-            </p>
+            </div>
           </div>
           <button className="btn-primary" id="plan-another-btn" onClick={onComplete}
             style={{ background: 'linear-gradient(135deg, #059669, #10B981)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
@@ -116,22 +116,22 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
     <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
+        background: 'linear-gradient(135deg, #008B74 0%, #0F766E 100%)',
         padding: '24px 20px', color: 'white',
       }}>
         <div style={{ marginBottom: 12 }}>
           <h2 style={{ fontSize: 22, fontWeight: 800 }}>Live Journey</h2>
-          <p style={{ fontSize: 14, color: '#a5b4fc', marginTop: 4 }}>{route.summary}</p>
+          <p style={{ fontSize: 14, color: '#A7F3D0', marginTop: 4 }}>{route.summary}</p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16, background: 'rgba(0,0,0,0.1)', padding: '12px 16px', borderRadius: 12 }}>
           <div>
-            <p style={{ fontSize: 12, color: '#c7d2fe', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>ETA</p>
+            <p style={{ fontSize: 12, color: '#d1fae5', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>ETA</p>
             <p style={{ fontSize: 24, fontWeight: 800, color: 'white', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Clock size={20} color="#a5b4fc" /> {eta} <span style={{ fontSize: 14, fontWeight: 600 }}>min</span>
+              <Clock size={20} color="#A7F3D0" /> {eta} <span style={{ fontSize: 14, fontWeight: 600 }}>min</span>
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: 12, color: '#c7d2fe', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Booking ID</p>
+            <p style={{ fontSize: 12, color: '#d1fae5', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Booking ID</p>
             <p style={{ fontSize: 14, fontFamily: 'monospace', fontWeight: 700, color: 'white', marginTop: 4 }}>{booking.bookingId}</p>
           </div>
         </div>
@@ -161,11 +161,11 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
               <div style={{
                 width: 32, height: 32, borderRadius: '50%',
-                background: i < currentModeIdx ? '#10B981' : i === currentModeIdx ? '#4F46E5' : '#E2E8F0',
-                color: 'white',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: i === currentModeIdx ? '0 0 0 4px rgba(79,70,229,0.2)' : 'none',
+                 background: i < currentModeIdx ? '#10B981' : i === currentModeIdx ? 'var(--primary)' : '#E2E8F0',
+                 color: 'white',
+                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                 flexShrink: 0,
+                 boxShadow: i === currentModeIdx ? '0 0 0 4px rgba(0, 139, 116, 0.2)' : 'none',
                 transition: 'all 0.4s ease',
               }}>
                 {i < currentModeIdx ? <Check size={16} strokeWidth={3} /> : MODE_ICONS[mode] || <Bus size={16} />}

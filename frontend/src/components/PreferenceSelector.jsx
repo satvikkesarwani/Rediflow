@@ -1,12 +1,10 @@
 import { Scale, Zap, Banknote, Footprints, Shuffle, Leaf } from 'lucide-react';
 
 const PREFERENCES = [
-  { id: 'balanced', label: 'Balanced', icon: <Scale size={14} /> },
-  { id: 'fastest', label: 'Fastest', icon: <Zap size={14} /> },
-  { id: 'cheapest', label: 'Cheapest', icon: <Banknote size={14} /> },
-  { id: 'least_walking', label: 'Less Walking', icon: <Footprints size={14} /> },
-  { id: 'fewest_transfers', label: 'Fewer Transfers', icon: <Shuffle size={14} /> },
-  { id: 'eco_friendly', label: 'Eco-Friendly', icon: <Leaf size={14} /> },
+  { id: 'balanced', label: 'Balanced' },
+  { id: 'fastest', label: 'Fastest' },
+  { id: 'cheapest', label: 'Cheapest' },
+  { id: 'least_walking', label: 'Least walking' },
 ];
 
 export function PreferenceSelector({ value, onChange }) {
@@ -19,19 +17,20 @@ export function PreferenceSelector({ value, onChange }) {
           style={{
             padding: '8px 14px',
             borderRadius: 20,
-            border: value === p.id ? '1.5px solid #4F46E5' : '1.5px solid #e2e8f0',
-            background: value === p.id ? '#EEF2FF' : 'white',
-            color: value === p.id ? '#3730A3' : '#64748B',
+            border: value === p.id ? '1px solid var(--primary)' : '1px solid #e2e8f0',
+            background: value === p.id ? 'var(--primary)' : 'white',
+            color: value === p.id ? 'white' : '#64748B',
             fontWeight: value === p.id ? 600 : 500,
             fontSize: 13,
             cursor: 'pointer',
             transition: 'all 0.15s ease',
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            justifyContent: 'center',
+            whiteSpace: 'nowrap',
           }}
         >
-          {p.icon} {p.label}
+          {p.label}
         </button>
       ))}
     </div>

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './index.css';
+import { api } from './services/api';
 
 import { HomeScreen } from './screens/HomeScreen';
 import { RouteOptionsScreen } from './screens/RouteOptionsScreen';
@@ -32,6 +33,13 @@ export default function App() {
   const [bookingData, setBookingData] = useState(null);
   const [paymentResult, setPaymentResult] = useState(null);
   const [walletBalance, setWalletBalance] = useState(500);
+
+  // Sync wallet balance from backend on mount
+  useEffect(() => {
+    api.getWalletBalance()
+      .then(data => setWalletBalance(data.balance))
+      .catch(() => {/* ignore, use default */});
+  }, []);
 
   const go = (s) => setScreen(s);
 
@@ -70,7 +78,11 @@ export default function App() {
     <div id="root">
       <div className="app-shell">
         {screen === SCREENS.HOME && (
-          <HomeScreen onSearch={handleSearch} onOpenWallet={() => go(SCREENS.WALLET)} addToast={addToast} />
+          <HomeScreen onSearch={handleSearch} onOpenWallet={async () => {
+            // refresh balance before opening wallet
+            try { const d = await api.getWalletBalance(); setWalletBalance(d.balance); } catch {}
+            go(SCREENS.WALLET);
+          }} addToast={addToast} />
         )}
 
         {screen === SCREENS.WALLET && (
@@ -118,6 +130,8 @@ export default function App() {
             onSuccess={handlePaymentSuccess}
             onBack={() => go(SCREENS.ROUTES)}
             addToast={addToast}
+            walletBalance={walletBalance}
+            setWalletBalance={setWalletBalance}
           />
         )}
 

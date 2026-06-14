@@ -33,4 +33,7 @@ export const api = {
   getJourneyUpdates: (bookingId) => request('GET', `/journey/${bookingId}/updates`),
 
   getWalletBalance: () => request('GET', '/wallet/balance?userId=demo-user'),
+
+  addWalletMoney: (amountRupees) =>
+    request('POST', '/wallet/add', { amountRupees, userId: 'demo-user' }),
 };
