@@ -49,7 +49,7 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
   const tag = TAG_BADGE[route.tag] || TAG_BADGE['Recommended'];
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',

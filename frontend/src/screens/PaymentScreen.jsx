@@ -32,7 +32,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
 
   if (state === 'success' && result) {
     return (
-      <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: '#f8fafc' }}>
+      <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: '#f8fafc' }}>
         <div className="animate-scale-in" style={{ textAlign: 'center', width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }} className="animate-bounce-gentle">
             <CheckCircle size={80} color="#10b981" strokeWidth={1.5} />
@@ -73,7 +73,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
 
   if (state === 'failed') {
     return (
-      <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: '#f8fafc' }}>
+      <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: '#f8fafc' }}>
         <div className="animate-scale-in" style={{ textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
             <XCircle size={72} color="#ef4444" strokeWidth={1.5} />
@@ -101,7 +101,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast }) {
   }
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',

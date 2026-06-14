@@ -8,6 +8,7 @@ import { BookingSummaryScreen } from './screens/BookingSummaryScreen';
 import { PaymentScreen } from './screens/PaymentScreen';
 import { JourneyPassScreen } from './screens/JourneyPassScreen';
 import { LiveTrackingScreen } from './screens/LiveTrackingScreen';
+import { WalletScreen } from './screens/WalletScreen';
 import { Toast, useToast } from './components/Toast';
 
 const SCREENS = {
@@ -18,6 +19,7 @@ const SCREENS = {
   PAYMENT: 'PAYMENT',
   PASS: 'PASS',
   TRACKING: 'TRACKING',
+  WALLET: 'WALLET',
 };
 
 export default function App() {
@@ -29,6 +31,7 @@ export default function App() {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [bookingData, setBookingData] = useState(null);
   const [paymentResult, setPaymentResult] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(500);
 
   const go = (s) => setScreen(s);
 
@@ -67,7 +70,16 @@ export default function App() {
     <div id="root">
       <div className="app-shell">
         {screen === SCREENS.HOME && (
-          <HomeScreen onSearch={handleSearch} addToast={addToast} />
+          <HomeScreen onSearch={handleSearch} onOpenWallet={() => go(SCREENS.WALLET)} addToast={addToast} />
+        )}
+
+        {screen === SCREENS.WALLET && (
+          <WalletScreen 
+            balance={walletBalance} 
+            setBalance={setWalletBalance} 
+            onBack={() => go(SCREENS.HOME)} 
+            addToast={addToast} 
+          />
         )}
 
         {screen === SCREENS.ROUTES && searchResult && (

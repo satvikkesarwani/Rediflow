@@ -67,7 +67,7 @@ export function JourneyPassScreen({ passData, booking, route, onStartJourney }) 
   const bookableLegs = booking.legs.filter((l) => l.mode !== 'walk');
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #1e1b4b 0%, #312e81 30%, #F8FAFC 60%)' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #1e1b4b 0%, #312e81 30%, #F8FAFC 60%)' }}>
       {/* Top area */}
       <div style={{ padding: '40px 20px 20px', color: 'white', textAlign: 'center' }}>
         <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.5px' }}>Your Journey Pass</h2>

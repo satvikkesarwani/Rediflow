@@ -14,7 +14,7 @@ export function BookingSummaryScreen({ booking, route, onProceed, onBack }) {
   const walkLegs = booking.legs.filter((l) => l.mode === 'walk');
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',

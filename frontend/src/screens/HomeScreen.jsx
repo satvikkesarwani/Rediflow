@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { PreferenceSelector } from '../components/PreferenceSelector';
-import { Train, MapPin, Search, Navigation } from 'lucide-react';
+import { Train, MapPin, Search, Navigation, Wallet } from 'lucide-react';
 
 const QUICK_ROUTES = [
   { source: 'Central Railway Station', destination: 'Tech Park' },
   { source: 'Residential Area North', destination: 'University Campus' },
 ];
 
-export function HomeScreen({ onSearch, addToast }) {
+export function HomeScreen({ onSearch, onOpenWallet, addToast }) {
   const [locations, setLocations] = useState([]);
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
@@ -48,7 +48,7 @@ export function HomeScreen({ onSearch, addToast }) {
   const quickFill = (s, d) => { setSource(s); setDestination(d); setErrors({}); };
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Hero header */}
       <div style={{
         background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
@@ -57,6 +57,14 @@ export function HomeScreen({ onSearch, addToast }) {
         position: 'relative',
         overflow: 'hidden',
       }}>
+        {/* Top-Right Wallet Button */}
+        <button 
+          onClick={onOpenWallet}
+          style={{ position: 'absolute', top: 24, right: 24, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, transition: 'background 0.2s' }}
+        >
+          <Wallet size={20} />
+        </button>
+
         <div style={{
           position: 'absolute', top: -40, right: -40,
           width: 200, height: 200, borderRadius: '50%',

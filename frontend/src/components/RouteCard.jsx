@@ -27,7 +27,7 @@ export function RouteCard({ route, onClick, delay = 0 }) {
       className="card cursor-pointer animate-fade-in-up"
       style={{
         borderLeft: `6px solid ${tag.border}`,
-        padding: '24px 16px',
+        padding: '28px 20px',
         animationDelay: `${delay}ms`,
         borderRadius: '16px',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
@@ -35,49 +35,49 @@ export function RouteCard({ route, onClick, delay = 0 }) {
       onClick={onClick}
     >
       {/* Tag */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
-        <span style={{ background: tag.bg, color: tag.color, border: `1px solid ${tag.color}30`, padding: '4px 12px', borderRadius: '20px', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, letterSpacing: '0.5px' }}>
+      <div className="flex flex-wrap items-center justify-between gap-2" style={{ marginBottom: '24px' }}>
+        <span style={{ background: tag.bg, color: tag.color, border: `1px solid ${tag.color}30`, padding: '6px 14px', borderRadius: '24px', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, letterSpacing: '0.5px' }}>
           {tag.icon} {tag.label}
         </span>
-        <span style={{ background: '#EEF2FF', color: '#4F46E5', padding: '4px 12px', borderRadius: '20px', fontSize: 13, fontWeight: 700 }}>
+        <span style={{ background: '#EEF2FF', color: '#4F46E5', padding: '6px 14px', borderRadius: '24px', fontSize: 13, fontWeight: 700 }}>
           Score {route.score}
         </span>
       </div>
 
       {/* Mode sequence */}
-      <div className="flex items-center gap-y-3 gap-x-2 flex-wrap mb-6">
+      <div className="flex items-center gap-y-3 gap-x-2 flex-wrap" style={{ marginBottom: '28px' }}>
         {modes.map((m, i) => {
           const key = m.trim().toLowerCase();
           return (
             <span key={i} className="flex items-center gap-2">
               <span
-                style={{ background: getModeColor(key), color: 'white', padding: '6px 12px', borderRadius: '20px', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}
+                style={{ background: getModeColor(key), color: 'white', padding: '6px 14px', borderRadius: '20px', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}
               >
                 {MODE_ICONS[key]} {m.trim()}
               </span>
-              {i < modes.length - 1 && <ChevronRight size={16} color="#94A3B8" />}
+              {i < modes.length - 1 && <ChevronRight size={18} color="#94A3B8" />}
             </span>
           );
         })}
       </div>
 
       {/* Core metrics */}
-      <div className="grid grid-cols-4 gap-2 mb-5">
-        <MetricBox icon={<Clock size={14} />} label="Time" value={`${route.totalTimeMinutes} min`} />
-        <MetricBox icon={<Banknote size={14} />} label="Fare" value={`₹${route.totalFareRupees}`} />
-        <MetricBox icon={<Shuffle size={14} />} label="Transfers" value={`${route.transferCount}`} />
-        <MetricBox icon={<Footprints size={14} />} label="Walking" value={`${route.walkingDistanceMeters} m`} />
+      <div className="grid grid-cols-4 gap-3" style={{ marginBottom: '24px' }}>
+        <MetricBox icon={<Clock size={15} />} label="Time" value={`${route.totalTimeMinutes} min`} />
+        <MetricBox icon={<Banknote size={15} />} label="Fare" value={`₹${route.totalFareRupees}`} />
+        <MetricBox icon={<Shuffle size={15} />} label="Transfers" value={`${route.transferCount}`} />
+        <MetricBox icon={<Footprints size={15} />} label="Walking" value={`${route.walkingDistanceMeters} m`} />
       </div>
 
       {/* Labels row & CTA */}
-      <div className="flex flex-wrap items-center justify-between gap-y-4 pt-5" style={{ borderTop: '1px solid #F1F5F9' }}>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 flex-1 min-w-0 pr-2">
-          <LabelPill icon={<Leaf size={14} />} text={`${route.carbonLabel} carbon`} color={route.carbonLabel === 'Low' ? '#10B981' : route.carbonLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
-          <LabelPill icon={<Shield size={14} />} text={`${route.safetyLabel} safety`} color={route.safetyLabel === 'High' ? '#10B981' : route.safetyLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
-          <LabelPill icon={<Wifi size={14} />} text={`${route.reliabilityLabel} reliability`} color={route.reliabilityLabel === 'High' ? '#10B981' : route.reliabilityLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
+      <div className="flex flex-wrap items-center justify-between gap-y-4" style={{ borderTop: '1px solid #F1F5F9', paddingTop: '24px' }}>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-3 flex-1 min-w-0 pr-2">
+          <LabelPill icon={<Leaf size={15} />} text={`${route.carbonLabel} carbon`} color={route.carbonLabel === 'Low' ? '#10B981' : route.carbonLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
+          <LabelPill icon={<Shield size={15} />} text={`${route.safetyLabel} safety`} color={route.safetyLabel === 'High' ? '#10B981' : route.safetyLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
+          <LabelPill icon={<Wifi size={15} />} text={`${route.reliabilityLabel} reliability`} color={route.reliabilityLabel === 'High' ? '#10B981' : route.reliabilityLabel === 'Medium' ? '#F59E0B' : '#EF4444'} />
         </div>
-        <div style={{ color: '#4F46E5', fontSize: 13, fontWeight: 700, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-          View Route <span style={{ fontSize: 16 }}>→</span>
+        <div style={{ color: '#4F46E5', fontSize: 14, fontWeight: 700, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+          View Route <span style={{ fontSize: 18 }}>→</span>
         </div>
       </div>
     </div>

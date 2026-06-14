@@ -89,7 +89,7 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
 
   if (completed && visibleCount >= allUpdates.length) {
     return (
-      <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: 'linear-gradient(135deg, #ECFDF5, #F0FDF4)' }}>
+      <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: 'linear-gradient(135deg, #ECFDF5, #F0FDF4)' }}>
         <div className="animate-scale-in" style={{ textAlign: 'center', width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
             <PartyPopper size={80} color="#059669" strokeWidth={1.5} />
@@ -113,7 +113,7 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
   }
 
   return (
-    <div className="screen-enter" style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
