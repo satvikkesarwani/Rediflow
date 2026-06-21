@@ -10,6 +10,7 @@ import { PaymentScreen } from './screens/PaymentScreen';
 import { JourneyPassScreen } from './screens/JourneyPassScreen';
 import { LiveTrackingScreen } from './screens/LiveTrackingScreen';
 import { WalletScreen } from './screens/WalletScreen';
+import { CarbonDashboardScreen } from './screens/CarbonDashboardScreen';
 import { Toast, useToast } from './components/Toast';
 
 const SCREENS = {
@@ -21,6 +22,7 @@ const SCREENS = {
   PASS: 'PASS',
   TRACKING: 'TRACKING',
   WALLET: 'WALLET',
+  ECO: 'ECO',
 };
 
 export default function App() {
@@ -92,7 +94,11 @@ export default function App() {
             // refresh balance before opening wallet
             try { const d = await api.getWalletBalance(); setWalletBalance(d.balance); } catch {}
             go(SCREENS.WALLET);
-          }} addToast={addToast} />
+          }} onOpenEco={() => go(SCREENS.ECO)} addToast={addToast} />
+        )}
+
+        {screen === SCREENS.ECO && (
+          <CarbonDashboardScreen onBack={() => go(SCREENS.HOME)} />
         )}
 
         {screen === SCREENS.WALLET && (
@@ -110,6 +116,8 @@ export default function App() {
             source={searchResult.source}
             destination={searchResult.destination}
             preference={searchResult.preference}
+            prefId={searchResult.prefId}
+            safeMode={searchResult.safeMode}
             onSelect={handleSelectRoute}
             onBack={() => go(SCREENS.HOME)}
           />
@@ -151,6 +159,7 @@ export default function App() {
             booking={bookingData}
             route={selectedRoute}
             onStartJourney={handleStartJourney}
+            addToast={addToast}
           />
         )}
 

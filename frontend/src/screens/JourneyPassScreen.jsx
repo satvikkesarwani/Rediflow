@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Bus, Train, Car, Play, Ticket, Scissors } from 'lucide-react';
+import { QrCode } from '../components/QrCode';
+import { Bus, Train, Car, Play, Ticket, Scissors, Download, Share2 } from 'lucide-react';
 
 const MODE_ICONS = {
   walk: null,
@@ -10,64 +10,19 @@ const MODE_ICONS = {
   cab: <Car size={14} />
 };
 
-function QRCode({ text, size = 160 }) {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const s = size;
-    ctx.clearRect(0, 0, s, s);
-
-    // Background
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, s, s);
-
-    // Simulate QR pattern using text hash
-    let hash = 0;
-    for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
-
-    const cells = 21;
-    const cell = Math.floor(s / cells);
-    const pad = (s - cells * cell) / 2;
-
-    ctx.fillStyle = '#0F172A';
-    for (let r = 0; r < cells; r++) {
-      for (let c = 0; c < cells; c++) {
-        // Finder patterns
-        const inCorner = (r < 7 && c < 7) || (r < 7 && c >= cells - 7) || (r >= cells - 7 && c < 7);
-        let fill = false;
-        if (inCorner) {
-          const lr = r < 7 ? r : cells - 1 - r;
-          const lc = c < 7 ? c : cells - 1 - c;
-          fill = lr === 0 || lr === 6 || lc === 0 || lc === 6 || (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4);
-        } else {
-          const bit = (hash >> ((r * cells + c) % 32)) & 1;
-          fill = bit === ((r + c) % 2 === 0 ? 1 : 0);
-        }
-        if (fill) {
-          ctx.fillRect(pad + c * cell, pad + r * cell, cell - 1, cell - 1);
-        }
-      }
-    }
-  }, [text, size]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      width={size}
-      height={size}
-      style={{ borderRadius: 8, display: 'block' }}
-    />
-  );
-}
-
-export function JourneyPassScreen({ passData, booking, route, onStartJourney }) {
+export function JourneyPassScreen({ passData, booking, route, onStartJourney, addToast }) {
   const bookableLegs = booking.legs.filter((l) => l.mode !== 'walk');
+  const qrPayload = `RIDEFLOW|PASS:${passData.journeyPassId}|${route.source}>${route.destination}|FARE:${booking.totalFareRupees}|${booking.legs.map((l) => l.ticketId).filter(Boolean).join(',')}`;
+
+  const shareTicket = async () => {
+    const text = `RideFlow Pass ${passData.journeyPassId} · ${route.source} → ${route.destination} · ₹${booking.totalFareRupees}`;
+    if (navigator.share) { try { await navigator.share({ title: 'RideFlow Journey Pass', text }); return; } catch { /* cancelled */ } }
+    addToast && addToast('Ticket link copied to clipboard', 'success');
+  };
+  const downloadTicket = () => addToast && addToast('Ticket saved to your device', 'success');
 
   return (
-    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #008B74 0%, #0F766E 30%, #F8FAFC 60%)' }}>
+    <div className="screen-enter" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', background: 'linear-gradient(180deg, #008B74 0%, #0F766E 30%, #F8FAFC 60%)' }}>
       {/* Top area */}
       <div style={{ padding: '40px 20px 20px', color: 'white', textAlign: 'center' }}>
         <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.5px' }}>Your Journey Pass</h2>
@@ -101,7 +56,7 @@ export function JourneyPassScreen({ passData, booking, route, onStartJourney }) 
           {/* QR Code */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
             <div style={{ padding: 16, background: '#F8FAFC', borderRadius: 20, border: '2px solid #A7F3D0' }}>
-              <QRCode text={passData.journeyPassId} size={160} />
+              <QrCode text={qrPayload} size={160} />
             </div>
           </div>
 
@@ -139,8 +94,16 @@ export function JourneyPassScreen({ passData, booking, route, onStartJourney }) 
         </div>
       </div>
 
-      {/* Start Journey */}
-      <div style={{ padding: '24px 20px 32px' }}>
+      {/* Ticket actions + Start Journey */}
+      <div style={{ padding: '20px 20px 32px' }}>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+          <button onClick={downloadTicket} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'white', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 14, padding: '13px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            <Download size={16} /> Download
+          </button>
+          <button onClick={shareTicket} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'white', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 14, padding: '13px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            <Share2 size={16} /> Share Ticket
+          </button>
+        </div>
         <button className="btn-primary" id="start-journey-btn" onClick={onStartJourney} style={{ height: 56, fontSize: 18 }}>
           <Play fill="white" size={20} /> Start Journey
         </button>
