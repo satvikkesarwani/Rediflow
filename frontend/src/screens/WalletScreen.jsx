@@ -33,7 +33,7 @@ export function WalletScreen({ balance, setBalance, onBack, addToast }) {
   };
 
   return (
-    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f8fafc' }}>
+    <div className="screen-enter" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', background: '#f8fafc' }}>
 
       {/* Header — light green */}
       <div style={{

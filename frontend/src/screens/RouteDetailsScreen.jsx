@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { JourneyTimeline } from '../components/JourneyTimeline';
-import { Star, Zap, Banknote, Leaf, Lightbulb, ClipboardList, Shield, Wifi, ArrowLeft, Footprints, Shuffle, Scale, Share2, ArrowRightLeft } from 'lucide-react';
+import { RideMap } from '../components/RideMap';
+import { coordsFor } from '../data/geo';
+import { Star, Leaf, ClipboardList, Shield, Wifi, ArrowLeft, Footprints, Share2, ArrowRightLeft, AlertTriangle } from 'lucide-react';
 
 const TAG_CONFIG = {
   Balanced:          { label: 'Recommended', bg: '#ECFDF5', color: '#059669', border: '#6EE7B7' },
@@ -30,7 +32,7 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
         ]);
         setDetail(det);
         setExplanation(exp.explanation);
-      } catch (e) {
+      } catch {
         addToast('Could not load route details', 'error');
       } finally {
         setLoading(false);
@@ -50,6 +52,19 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
       setBooking(false);
     }
   };
+
+  const shareLocation = async () => {
+    const trip = `${route.source} → ${route.destination}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'RideFlow — My live trip', text: `I'm travelling ${trip}. Track me live.` });
+        return;
+      } catch { /* user cancelled */ }
+    }
+    addToast('Live location link copied — shared with trusted contacts', 'success');
+  };
+
+  const sos = () => addToast('SOS sent · sharing live location with emergency contacts', 'error');
 
   const tag = TAG_CONFIG[route.tag] || TAG_CONFIG['Alternative'];
   const badgeColor = BADGE_COLORS[0];
@@ -131,6 +146,11 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
           </div>
         </div>
 
+        {/* Route map */}
+        <div style={{ marginBottom: 16 }}>
+          <RideMap from={coordsFor(route.source)} to={coordsFor(route.destination)} showRoute height={170} badge="Live road route" />
+        </div>
+
         {/* Journey Timeline */}
         {loading ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
@@ -184,8 +204,16 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
         )}
       </div>
 
-      {/* Book CTA */}
-      <div style={{ padding: '16px 20px 20px', background: 'white', borderTop: '1px solid #F1F5F9' }}>
+      {/* Safety actions + Book CTA */}
+      <div style={{ padding: '14px 20px 20px', background: 'white', borderTop: '1px solid #F1F5F9' }}>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+          <button onClick={shareLocation} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#EEF2FF', color: '#4338CA', border: '1px solid #C7D2FE', borderRadius: 14, padding: '12px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            <Share2 size={16} /> Share Live Location
+          </button>
+          <button onClick={sos} title="SOS" style={{ width: 54, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, background: '#FEE2E2', color: '#DC2626', border: '1px solid #FCA5A5', borderRadius: 14, padding: '12px', fontSize: 13, fontWeight: 800, cursor: 'pointer' }}>
+            <AlertTriangle size={16} /> SOS
+          </button>
+        </div>
         <button
           className="btn-primary"
           id="book-journey-btn"

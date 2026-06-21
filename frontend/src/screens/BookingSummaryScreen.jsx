@@ -32,7 +32,7 @@ export function BookingSummaryScreen({ booking, route, onProceed, onBack }) {
         </p>
       </div>
 
-      <div style={{ padding: '24px 16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ padding: '24px 16px', flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
         {/* Journey Tickets */}
         <div className="card animate-fade-in-up">
           <h3 style={{ fontSize: 13, fontWeight: 700, color: '#64748B', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 16 }}>

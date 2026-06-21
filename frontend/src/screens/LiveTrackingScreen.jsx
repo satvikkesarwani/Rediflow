@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
-import { Bus, Rocket, MapPin, Clock, Car, PartyPopper, Train, Map, AlertTriangle, Check, Bell, Hourglass, Ticket } from 'lucide-react';
+import { RideMap } from '../components/RideMap';
+import { coordsFor } from '../data/geo';
+import { Bus, Rocket, MapPin, Clock, Car, PartyPopper, Train, Map, AlertTriangle, Check, Bell, Hourglass, Ticket, Share2 } from 'lucide-react';
 
 const UPDATE_TYPE_CONFIG = {
   arrival: { icon: <Bus size={16} />, color: '#10B981' },
@@ -21,7 +23,6 @@ const MODE_ICONS = {
 };
 
 export function LiveTrackingScreen({ booking, passData, route, onComplete, addToast }) {
-  const [updates, setUpdates] = useState([]);
   const [allUpdates, setAllUpdates] = useState([]);
   const [visibleCount, setVisibleCount] = useState(0);
   const [eta, setEta] = useState(route.totalTimeMinutes + 5);
@@ -182,8 +183,13 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
         </div>
       </div>
 
+      {/* Live map */}
+      <div style={{ padding: '16px 20px 0', background: '#f8fafc' }}>
+        <RideMap from={coordsFor(route.source)} to={coordsFor(route.destination)} showRoute height={150} badge="Tracking live" />
+      </div>
+
       {/* Live updates feed */}
-      <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', background: '#f8fafc' }}>
+      <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', background: '#f8fafc' }}>
         <p style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 4 }}>
           Live Updates
         </p>
@@ -262,15 +268,23 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
         ))}
       </div>
 
-      {/* Footer info */}
-      <div style={{ padding: '16px 20px', background: 'white', borderTop: '1px solid #F1F5F9', boxShadow: '0 -4px 12px rgba(0,0,0,0.02)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: '#64748b' }}>
+      {/* Footer info + safety */}
+      <div style={{ padding: '14px 20px', background: 'white', borderTop: '1px solid #F1F5F9', boxShadow: '0 -4px 12px rgba(0,0,0,0.02)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: '#64748b', marginBottom: 12 }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <Ticket size={14} /> Pass <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0f172a' }}>{passData.journeyPassId}</span>
           </span>
           <span style={{ fontWeight: 500, background: '#f1f5f9', padding: '4px 10px', borderRadius: 12 }}>
             Update {Math.min(visibleCount, allUpdates.length)} / {allUpdates.length}
           </span>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => addToast('Live location shared with trusted contacts', 'success')} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#EEF2FF', color: '#4338CA', border: '1px solid #C7D2FE', borderRadius: 12, padding: '11px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+            <Share2 size={15} /> Share Live Location
+          </button>
+          <button onClick={() => addToast('SOS sent · emergency contacts notified', 'error')} style={{ width: 52, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FEE2E2', color: '#DC2626', border: '1px solid #FCA5A5', borderRadius: 12, padding: '11px', fontSize: 12, fontWeight: 800, cursor: 'pointer' }}>
+            SOS
+          </button>
         </div>
       </div>
     </div>
