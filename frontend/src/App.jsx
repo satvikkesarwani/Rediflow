@@ -93,13 +93,22 @@ export default function App() {
   // go() is the single point of screen transitions. It enforces guards so that
   // screens that require state never render blank (e.g. after a session restore
   // where sessionStorage was partially cleared).
-  const go = (s) => {
+  //
+  // IMPORTANT: callers that set state via setSelectedRoute/setBookingData/etc.
+  // and navigate in the SAME handler must pass the fresh values via `ready`,
+  // because the corresponding state variables are still stale (their setters
+  // haven't been applied yet within this synchronous handler). Without this the
+  // guard reads the old (often null) value and bounces back to HOME.
+  const go = (s, ready = {}) => {
+    const route = ready.route !== undefined ? ready.route : selectedRoute;
+    const booking = ready.booking !== undefined ? ready.booking : bookingData;
+    const payment = ready.payment !== undefined ? ready.payment : paymentResult;
     const needsRoute = [SCREENS.DETAILS, SCREENS.BOOKING, SCREENS.PAYMENT, SCREENS.PASS, SCREENS.TRACKING];
     const needsBooking = [SCREENS.BOOKING, SCREENS.PAYMENT, SCREENS.PASS, SCREENS.TRACKING];
     const needsPayment = [SCREENS.PASS, SCREENS.TRACKING];
-    if (needsRoute.includes(s) && !selectedRoute) { setScreen(SCREENS.HOME); return; }
-    if (needsBooking.includes(s) && !bookingData) { setScreen(SCREENS.HOME); return; }
-    if (needsPayment.includes(s) && !paymentResult) { setScreen(SCREENS.HOME); return; }
+    if (needsRoute.includes(s) && !route) { setScreen(SCREENS.HOME); return; }
+    if (needsBooking.includes(s) && !booking) { setScreen(SCREENS.HOME); return; }
+    if (needsPayment.includes(s) && !payment) { setScreen(SCREENS.HOME); return; }
     setScreen(s);
   };
 
@@ -224,20 +233,21 @@ export default function App() {
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
 
   const handleSelectRoute = (route, routeIndex = 0) => {
-    setSelectedRoute({ ...route, source: searchResult?.source, destination: searchResult?.destination });
+    const fullRoute = { ...route, source: searchResult?.source, destination: searchResult?.destination };
+    setSelectedRoute(fullRoute);
     setSelectedRouteIndex(routeIndex);
-    go(SCREENS.DETAILS);
+    go(SCREENS.DETAILS, { route: fullRoute });
   };
 
   const handleBook = (booking, route) => {
     setBookingData(booking);
     if (route) setSelectedRoute((prev) => ({ ...prev, ...route }));
-    go(SCREENS.BOOKING);
+    go(SCREENS.BOOKING, { booking });
   };
 
   const handlePaymentSuccess = (result) => {
     setPaymentResult(result);
-    go(SCREENS.PASS);
+    go(SCREENS.PASS, { payment: result });
   };
 
   const handleStartJourney = () => go(SCREENS.TRACKING);
