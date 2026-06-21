@@ -10,11 +10,11 @@ const MODE_ICONS = {
 };
 
 export function BookingSummaryScreen({ booking, route, onProceed, onBack }) {
-  const bookableLegs = booking.legs.filter((l) => l.mode !== 'walk');
-  const walkLegs = booking.legs.filter((l) => l.mode === 'walk');
+  const bookableLegs = (booking.legs || []).filter((l) => l.mode !== 'walk');
+  const walkLegs = (booking.legs || []).filter((l) => l.mode === 'walk');
 
   return (
-    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#F8FAFC' }}>
+    <div className="screen-enter" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', background: '#F8FAFC' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #008B74 0%, #0F766E 100%)',
@@ -27,6 +27,14 @@ export function BookingSummaryScreen({ booking, route, onProceed, onBack }) {
           <ArrowLeft size={18} /> Back
         </button>
         <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>Booking Summary</h2>
+        {route && (
+          <p style={{ fontSize: 16, fontWeight: 700, color: 'white', marginBottom: 4 }}>
+            {route.source} → {route.destination}
+          </p>
+        )}
+        {route?.summary && (
+          <p style={{ fontSize: 13, color: '#A7F3D0', marginBottom: 4 }}>{route.summary}</p>
+        )}
         <p style={{ fontSize: 15, color: '#A7F3D0', display: 'flex', alignItems: 'center', gap: 6 }}>
           Booking ID: <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'white' }}>{booking.bookingId}</span>
         </p>

@@ -2,7 +2,7 @@ import { RouteCard } from '../components/RouteCard';
 import { RideMap } from '../components/RideMap';
 import { coordsFor } from '../data/geo';
 import { safetyPct } from '../data/routeMeta';
-import { PREFERENCES } from '../components/PreferenceSelector';
+import { PREFERENCES } from '../data/preferences';
 import { ChevronLeft, Map, Eye, Sparkles, ShieldCheck } from 'lucide-react';
 
 const SAFE_THRESHOLD = 80;
@@ -45,7 +45,7 @@ export function RouteOptionsScreen({ routes, source, destination, preference, pr
     <div className="screen-enter" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', background: '#F8FAFC' }}>
       {/* Header */}
       <div style={{ background: 'white', padding: '20px 24px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9' }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+        <button onClick={onBack} aria-label="Go back" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           <ChevronLeft size={28} color="#0F172A" />
         </button>
         <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A' }}>Route Options</h2>
@@ -97,7 +97,7 @@ export function RouteOptionsScreen({ routes, source, destination, preference, pr
           </div>
         ) : (
           visible.map((route, i) => (
-            <RouteCard key={route.routeId} route={route} index={i} delay={i * 80} onClick={() => onSelect(route)} />
+            <RouteCard key={route.routeId} route={route} index={i} delay={i * 80} onClick={() => onSelect(route, i)} />
           ))
         )}
       </div>

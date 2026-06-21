@@ -17,10 +17,3 @@ export function QrCode({ text, size = 160, dark = '#0F172A', light = '#FFFFFF' }
 
   return <canvas ref={canvasRef} width={size} height={size} style={{ borderRadius: 8, display: 'block' }} />;
 }
-
-// Builds a standard UPI intent string that any UPI app can scan.
-export function upiIntent({ pa = 'rideflow@upi', pn = 'RideFlow', am, tn = 'RideFlow Journey', tr }) {
-  const params = new URLSearchParams({ pa, pn, am: String(am), cu: 'INR', tn });
-  if (tr) params.set('tr', tr);
-  return `upi://pay?${params.toString()}`;
-}

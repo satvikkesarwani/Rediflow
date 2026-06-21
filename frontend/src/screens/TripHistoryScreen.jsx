@@ -64,7 +64,7 @@ export function TripHistoryScreen({ onBack }) {
 
                 {/* modes */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
-                  {t.summary.split(' → ').map((m, j) => {
+                  {(t.summary || '').split(' → ').map((m, j) => {
                     const key = m.trim().toLowerCase().split(' ')[0];
                     return (
                       <span key={j} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 12, padding: '3px 9px', fontSize: 11, fontWeight: 600, color: '#475569', textTransform: 'capitalize' }}>

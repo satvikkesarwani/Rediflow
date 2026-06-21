@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Footprints, Bus, Train, Car, Bike, MapPin } from 'lucide-react';
+import { Footprints, Bus, Train, Car, Bike } from 'lucide-react';
 
 const MODE_ICONS = {
   walk:  <Footprints size={18} color="white" />,

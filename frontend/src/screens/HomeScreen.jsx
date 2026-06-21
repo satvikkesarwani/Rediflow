@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import heroBg from '../assets/hero-bg.png';
 import { api } from '../services/api';
-import { PreferenceSelector, prefToBackend, prefIsSafe } from '../components/PreferenceSelector';
+import { PreferenceSelector } from '../components/PreferenceSelector';
+import { prefToBackend, prefIsSafe } from '../data/preferences';
 import { RideMap } from '../components/RideMap';
 import { LOCATIONS, coordsFor } from '../data/geo';
 import {
@@ -18,8 +20,17 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, o
   const [loading, setLoading] = useState(false);
   const [mapTarget, setMapTarget] = useState('to'); // which field a map tap fills
   const [when, setWhen] = useState('now'); // 'now' | 'later'
-  const [safeMode, setSafeMode] = useState(false);
-  const [recent, setRecent] = useState([]);
+  // Derive safeMode from preference during render rather than syncing via an effect.
+  // This avoids a synchronous setState inside a useEffect body (ESLint set-state-in-effect)
+  // while keeping the behavior identical: Women Safe preference always enables safe mode,
+  // but the user can also toggle it independently.
+  const [localSafeMode, setLocalSafeMode] = useState(false);
+  const safeMode = prefIsSafe(preference) || localSafeMode;
+
+  // Initialise recent searches directly in useState to avoid a sync setState in useEffect.
+  const [recent, setRecent] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch { return []; }
+  });
 
   useEffect(() => {
     api.getLocations()
@@ -38,11 +49,7 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, o
         setSource('Central Railway Station');
         setDestination('Tech Park');
       });
-    try { setRecent(JSON.parse(localStorage.getItem(RECENT_KEY)) || []); } catch { /* ignore */ }
   }, []);
-
-  // Women Safe preference auto-enables Safe Mode.
-  useEffect(() => { if (prefIsSafe(preference)) setSafeMode(true); }, [preference]);
 
   const handleMapPick = (name) => {
     if (mapTarget === 'from') { setSource(name); setMapTarget('to'); addToast(`Origin set to ${name}`, 'success'); }
@@ -60,6 +67,9 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, o
   const runSearch = async (s = source, d = destination) => {
     if (!s || !d) { addToast('Please select source and destination', 'error'); return; }
     if (s === d) { addToast('Source and destination cannot be the same', 'error'); return; }
+    // Schedule Later: show informational toast but proceed with the live route search.
+    // The feature flag (when === 'later') is preserved for future date-picker integration.
+    if (when === 'later') { addToast('Scheduled departure is coming soon — showing live routes for now', 'info'); }
     setLoading(true);
     try {
       const backendPref = prefToBackend(preference);
@@ -80,9 +90,16 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, o
 
   const fromCoords = coordsFor(source);
   const toCoords = coordsFor(destination);
-  const selectableMarkers = locations
-    .map((l) => ({ name: l.name, lat: l.latitude ?? coordsFor(l.name)?.lat, lng: l.longitude ?? coordsFor(l.name)?.lng }))
-    .filter((l) => l.lat && l.lng);
+  // Memoize selectable markers so the array reference is stable between renders.
+  // Without this, every parent re-render creates a new array reference, which makes
+  // JSON.stringify(selectable) in RideMap's effect dependency produce a new string
+  // value on every render — triggering repeated OSRM fetches and visible map flicker.
+  const selectableMarkers = useMemo(
+    () => locations
+      .map((l) => ({ name: l.name, lat: l.latitude ?? coordsFor(l.name)?.lat, lng: l.longitude ?? coordsFor(l.name)?.lng }))
+      .filter((l) => l.lat && l.lng),
+    [locations]
+  );
 
   return (
     <div className="screen-enter" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', background: 'white' }}>
@@ -108,7 +125,7 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, o
       <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}>
         {/* Hero */}
         <div style={{ position: 'relative', height: 160, background: '#f0f7f4', overflow: 'hidden', display: 'flex', alignItems: 'flex-start', padding: '28px 24px 0' }}>
-          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '65%', backgroundImage: 'url(/src/assets/hero-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center 55%', backgroundRepeat: 'no-repeat' }} />
+          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '65%', backgroundImage: `url(${heroBg})`, backgroundSize: 'cover', backgroundPosition: 'center 55%', backgroundRepeat: 'no-repeat' }} />
           <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '65%', background: 'linear-gradient(to right, #f0f7f4 0%, #f0f7f450 30%, transparent 60%)' }} />
           <h1 style={{ position: 'relative', zIndex: 2, fontSize: 28, fontWeight: 900, color: '#0F172A', lineHeight: 1.2, maxWidth: 175, margin: 0, letterSpacing: '-0.5px' }}>
             Plan your<br />journey
@@ -181,7 +198,7 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, o
                 <div style={{ fontSize: 11, color: '#64748B' }}>Filters safer routes & shares live location</div>
               </div>
             </div>
-            <button onClick={() => setSafeMode((v) => !v)} style={{ width: 46, height: 26, borderRadius: 20, border: 'none', cursor: 'pointer', background: safeMode ? 'var(--primary)' : '#CBD5E1', position: 'relative', transition: 'all 0.2s' }}>
+            <button onClick={() => setLocalSafeMode((v) => !v)} style={{ width: 46, height: 26, borderRadius: 20, border: 'none', cursor: 'pointer', background: safeMode ? 'var(--primary)' : '#CBD5E1', position: 'relative', transition: 'all 0.2s' }}>
               <span style={{ position: 'absolute', top: 3, left: safeMode ? 23 : 3, width: 20, height: 20, borderRadius: '50%', background: 'white', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
             </button>
           </div>

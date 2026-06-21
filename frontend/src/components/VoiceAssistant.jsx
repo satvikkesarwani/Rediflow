@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { parseCommand, prefLabel } from '../data/assistant';
 import { Sparkles, X, Mic, Send, Check, Smartphone, Ticket, ArrowRight } from 'lucide-react';
 
@@ -35,15 +35,19 @@ export function VoiceAssistant({ open, onClose, onPlan, onBook, onOpenPass }) {
   ]);
   const [input, setInput] = useState('');
   const [listening, setListening] = useState(false);
-  const [supported, setSupported] = useState(true);
+  // Plain variable — browser capability doesn't change at runtime, no state needed.
+  const supported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
   const [pipeline, setPipeline] = useState(null);
   const recRef = useRef(null);
   const feedRef = useRef(null);
   const handleRef = useRef(null);
+  // Keep a ref to onBook so startBooking (which has empty deps) never captures a stale closure.
+  const onBookRef = useRef(onBook);
+  useEffect(() => { onBookRef.current = onBook; }, [onBook]);
 
   useEffect(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { setSupported(false); return; }
+    if (!SR) return;
     const rec = new SR();
     rec.lang = 'en-IN';
     rec.interimResults = false;
@@ -60,26 +64,36 @@ export function VoiceAssistant({ open, onClose, onPlan, onBook, onOpenPass }) {
 
   const push = (who, text) => setMessages((m) => [...m, { who, text }]);
 
-  const startBooking = (cmd) => {
+  // startBooking uses onBookRef.current to avoid capturing a stale onBook prop.
+  // The empty deps array is intentional — the callback never needs to re-create.
+  const startBooking = useCallback((cmd) => {
     const origin = cmd.source || 'Central Railway Station';
     const reply = `Booking the ${prefLabel(cmd.prefId)} route from ${origin} to ${cmd.destination}, paying via ${PAY_LABEL[cmd.payment]}. One moment…`;
     push('bot', reply); speak(reply);
 
-    const params = { source: cmd.source, destination: cmd.destination, prefId: cmd.prefId, payment: cmd.payment };
+    // existingBookingId is set when retrying payment for an already-created booking
+    // so the backend createBooking step is skipped and no duplicate booking is made.
+    const params = { source: cmd.source, destination: cmd.destination, prefId: cmd.prefId, payment: cmd.payment, existingBookingId: cmd.existingBookingId };
     setPipeline({ params, steps: { route: {}, booking: {}, payment: {}, pass: {} }, done: false, error: null });
 
     const onProgress = (key, status, data) =>
       setPipeline((p) => (p ? { ...p, steps: { ...p.steps, [key]: { status, detail: data?.detail, method: data?.method } } } : p));
 
-    onBook({ ...params, onProgress })
+    onBookRef.current({ ...params, onProgress })
       .then((res) => {
-        setPipeline((p) => (p ? { ...p, done: true, passId: res.passId } : p));
+        // Store the bookingId so a UPI retry can reuse the existing booking
+        if (res.bookingId) {
+          setPipeline((p) => (p ? { ...p, params: { ...p.params, existingBookingId: res.bookingId }, done: true, passId: res.passId } : p));
+        } else {
+          setPipeline((p) => (p ? { ...p, done: true, passId: res.passId } : p));
+        }
         const ok = `All set! Your journey pass ${res.passId} is ready. Tap to start your journey.`;
         push('bot', ok); speak('All set! Your journey pass is ready.');
       })
       .catch((err) => {
         if (err?.reason === 'lowbalance') {
-          setPipeline((p) => (p ? { ...p, error: 'lowbalance', fare: err.fare } : p));
+          // Store the bookingId from the failed wallet attempt so UPI retry reuses it
+          setPipeline((p) => (p ? { ...p, params: { ...p.params, existingBookingId: err.bookingId }, error: 'lowbalance', fare: err.fare } : p));
           const msg = `Your NCMC wallet is short for this ₹${err.fare} trip. Tap "Pay by UPI instead" to finish.`;
           push('bot', msg); speak('Your wallet balance is low. You can pay by UPI instead.');
         } else if (err?.reason === 'same') {
@@ -90,11 +104,13 @@ export function VoiceAssistant({ open, onClose, onPlan, onBook, onOpenPass }) {
           push('bot', 'Sorry, I couldn\'t complete that booking. Please try again.');
         }
       });
-  };
+  }, []);
 
   const retryUpi = () => {
     const p = pipeline?.params;
     if (!p) return;
+    // Pass the existingBookingId so bookViaAssistant can skip createBooking,
+    // preventing a duplicate booking for the same journey.
     setPipeline(null);
     startBooking({ ...p, payment: 'upi' });
   };
@@ -116,7 +132,9 @@ export function VoiceAssistant({ open, onClose, onPlan, onBook, onOpenPass }) {
   };
   // Keep handleRef always pointing at the latest handle closure so the speech
   // recognition onresult callback (set up once) never holds a stale reference.
-  handleRef.current = handle;
+  // useLayoutEffect runs synchronously after render, satisfying the lint rule
+  // while preserving the stale-closure fix.
+  useLayoutEffect(() => { handleRef.current = handle; });
 
   const toggleMic = () => {
     if (!recRef.current) return;
@@ -146,7 +164,7 @@ export function VoiceAssistant({ open, onClose, onPlan, onBook, onOpenPass }) {
               </div>
             </div>
           </div>
-          <button className="btn-tap" onClick={onClose} style={{ background: '#F1F5F9', border: 'none', borderRadius: '50%', width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+          <button className="btn-tap" onClick={onClose} aria-label="Close assistant" style={{ background: '#F1F5F9', border: 'none', borderRadius: '50%', width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <X size={18} color="#475569" />
           </button>
         </div>

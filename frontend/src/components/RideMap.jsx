@@ -76,6 +76,9 @@ export function RideMap({
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const layersRef = useRef({ markers: [], route: null });
+  // Tracks the "You are here" locate marker separately so repeated taps don't
+  // accumulate orphaned blue-dot markers on the map.
+  const locateMarkerRef = useRef(null);
   const [locating, setLocating] = useState(false);
 
   // init map once
@@ -162,7 +165,7 @@ export function RideMap({
     };
     drawRoute();
     return () => { cancelled = true; };
-  }, [from, to, showRoute, JSON.stringify(selectable)]);
+  }, [from, to, showRoute, onPick, JSON.stringify(selectable)]);
 
   const handleLocate = () => {
     if (!navigator.geolocation) return;
@@ -173,7 +176,9 @@ export function RideMap({
         setLocating(false);
         if (mapRef.current) {
           mapRef.current.setView([here.lat, here.lng], 14);
-          L.marker([here.lat, here.lng], { icon: dotIcon('#3B82F6', true) })
+          // Remove previous locate marker before adding a new one to prevent accumulation
+          if (locateMarkerRef.current) { mapRef.current.removeLayer(locateMarkerRef.current); }
+          locateMarkerRef.current = L.marker([here.lat, here.lng], { icon: dotIcon('#3B82F6', true) })
             .addTo(mapRef.current)
             .bindTooltip('You are here', { direction: 'top' });
         }

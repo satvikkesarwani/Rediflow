@@ -82,6 +82,7 @@ def get_route_detail(routeId: str):
         for s in raw_steps
     ]
 
+    walking = enriched.get("walkingDistanceMeters", enriched.get("totalWalkingMeters", 0))
     return RouteDetail(
         routeId=enriched["routeId"],
         source=enriched["source"],
@@ -91,6 +92,7 @@ def get_route_detail(routeId: str):
         totalFareRupees=enriched["totalFareRupees"],
         transferCount=enriched["transferCount"],
         totalWalkingMeters=enriched["totalWalkingMeters"],
+        walkingDistanceMeters=walking,
         carbonLabel=enriched["carbonLabel"],
         safetyLabel=enriched["safetyLabel"],
         reliabilityLabel=enriched["reliabilityLabel"],
