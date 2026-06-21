@@ -17,7 +17,7 @@ const TAG_CONFIG = {
 
 const BADGE_COLORS = ['#008B74', '#10B981', '#3B82F6', '#F59E0B'];
 
-export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
+export function RouteDetailsScreen({ route, routeIndex = 0, onBook, onBack, addToast }) {
   const [detail, setDetail] = useState(null);
   const [explanation, setExplanation] = useState('');
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
       }
     };
     fetchData();
-  }, [route.routeId]);
+  }, [route.routeId, addToast]);
 
   const handleBook = async () => {
     setBooking(true);
@@ -67,13 +67,13 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
   const sos = () => addToast('SOS sent · sharing live location with emergency contacts', 'error');
 
   const tag = TAG_CONFIG[route.tag] || TAG_CONFIG['Alternative'];
-  const badgeColor = BADGE_COLORS[0];
-  const letterBadge = 'A';
+  const badgeColor = BADGE_COLORS[routeIndex % BADGE_COLORS.length];
+  const letterBadge = String.fromCharCode(65 + routeIndex);
 
   const carbonColor = route.carbonLabel === 'Low' ? '#059669' : route.carbonLabel === 'High' ? '#DC2626' : '#D97706';
 
   return (
-    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#F8FAFC' }}>
+    <div className="screen-enter" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', background: '#F8FAFC' }}>
 
       {/* Simple white header */}
       <div style={{
@@ -82,7 +82,7 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderBottom: '1px solid #F1F5F9',
       }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+        <button onClick={onBack} aria-label="Go back" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
           <ArrowLeft size={24} color="#0F172A" />
         </button>
         <h2 style={{ fontSize: 17, fontWeight: 700, color: '#0F172A' }}>Route Details</h2>
@@ -239,6 +239,8 @@ export function RouteDetailsScreen({ route, onBook, onBack, addToast }) {
 }
 
 function Metric({ icon, label, value }) {
+  // Low Carbon is a positive signal (green). Low Safety or Low Reliability are both
+  // negative signals that should be shown in red — not amber — to clearly communicate risk.
   const color = value === 'High' ? '#059669'
     : value === 'Low' ? (label === 'Carbon' ? '#059669' : '#DC2626')
     : '#D97706';

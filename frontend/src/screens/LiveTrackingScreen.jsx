@@ -28,9 +28,16 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
   const [eta, setEta] = useState(route.totalTimeMinutes + 5);
   const [showDelay, setShowDelay] = useState(false);
   const [started, setStarted] = useState(false);
-  const [completed, setCompleted] = useState(false);
+  // Track whether updates failed to load so we never show "Journey Complete" on error
+  const [fetchError, setFetchError] = useState(false);
   const timerRef = useRef(null);
   const etaRef = useRef(null);
+
+  // completed is derived — no separate state to keep in sync.
+  // It is true when: started, not errored, all updates have been revealed (or there are none).
+  const completed = started && !fetchError && allUpdates.length > 0 && visibleCount >= allUpdates.length;
+  // Edge case: no updates and no error means journey is trivially "done" (instant route).
+  const instantComplete = started && !fetchError && allUpdates.length === 0;
 
   useEffect(() => {
     let cancelled = false;
@@ -42,15 +49,50 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
           setStarted(true);
         }
       })
-      .catch(() => { if (!cancelled) addToast('Could not load journey updates', 'error'); });
+      .catch(() => {
+        if (!cancelled) {
+          addToast('Could not load journey updates', 'error');
+          // Mark error so the empty-updates check does NOT auto-complete the journey.
+          // We still set started so the skeleton goes away and the user can use the screen.
+          setFetchError(true);
+          setStarted(true);
+        }
+      });
     return () => { cancelled = true; };
-  }, []);
+  }, [booking.bookingId, addToast]);
 
-  // Sequential update reveal — pure increment only, no side-effects inside updater
+  // Sequential update reveal — pure increment only, no side-effects inside updater.
+  // We gate interval creation with a ref to prevent duplicate concurrent intervals when
+  // the effect re-runs (e.g. strict-mode double-invoke or allUpdates async update).
+  const revealStartedRef = useRef(false);
+  // allUpdatesRef keeps revealNext up-to-date without re-creating the interval.
+  const allUpdatesRef = useRef(allUpdates);
+  useEffect(() => { allUpdatesRef.current = allUpdates; }, [allUpdates]);
+
   useEffect(() => {
     if (!started || allUpdates.length === 0) return;
 
-    const revealNext = () => setVisibleCount((prev) => prev + 1);
+    // Prevent creating a second interval if this effect re-runs while one is active.
+    if (revealStartedRef.current) return;
+    revealStartedRef.current = true;
+
+    const revealNext = () => {
+      setVisibleCount((prev) => {
+        const next = prev + 1;
+        const upd = allUpdatesRef.current[prev]; // prev is the 0-based index we just revealed
+        // Side-effects on reveal: check delay type. setShowDelay is called inside the
+        // setState updater callback which counts as an "event response" not a sync effect body.
+        if (upd?.type === 'delay') {
+          // Schedule outside the updater to avoid nested setState
+          Promise.resolve().then(() => setShowDelay(true));
+        }
+        if (next >= allUpdatesRef.current.length || upd?.type === 'completed') {
+          clearInterval(timerRef.current);
+          clearInterval(etaRef.current);
+        }
+        return next;
+      });
+    };
 
     // First update immediately
     revealNext();
@@ -61,20 +103,9 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
     return () => {
       clearInterval(timerRef.current);
       clearInterval(etaRef.current);
+      revealStartedRef.current = false;
     };
   }, [started, allUpdates]);
-
-  // Handle side-effects triggered by newly revealed updates
-  useEffect(() => {
-    if (visibleCount === 0 || allUpdates.length === 0) return;
-    const upd = allUpdates[visibleCount - 1];
-    if (upd?.type === 'delay') setShowDelay(true);
-    if (upd?.type === 'completed' || visibleCount >= allUpdates.length) {
-      clearInterval(timerRef.current);
-      clearInterval(etaRef.current);
-      setCompleted(true);
-    }
-  }, [visibleCount, allUpdates]);
 
   // Auto-dismiss delay banner
   useEffect(() => {
@@ -87,10 +118,26 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
   const visible = allUpdates.slice(0, visibleCount);
   const currentIdx = visibleCount > 0 ? visibleCount - 1 : 0;
 
-  const routeModes = route.summary.split(' → ').map(m => m.trim().toLowerCase());
+  const routeModes = (route.summary || '').split(' → ').map(m => m.trim().toLowerCase());
   const currentModeIdx = Math.min(Math.floor(currentIdx / 1.5), routeModes.length - 1);
 
-  if (completed && visibleCount >= allUpdates.length) {
+  // Error state: show a retry/error message instead of falsely completing the journey
+  if (fetchError && allUpdates.length === 0) {
+    return (
+      <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: '#f8fafc' }}>
+        <div style={{ textAlign: 'center' }}>
+          <AlertTriangle size={56} color="#F59E0B" strokeWidth={1.5} style={{ marginBottom: 16 }} />
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>Could not load updates</h2>
+          <p style={{ color: '#64748b', fontSize: 14, marginBottom: 24 }}>Your journey is in progress — please check your connection and try again.</p>
+          <button className="btn-primary" onClick={onComplete} style={{ background: 'linear-gradient(135deg, #059669, #10B981)' }}>
+            <Map size={18} /> End Journey
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (completed || instantComplete) {
     return (
       <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, background: 'linear-gradient(135deg, #ECFDF5, #F0FDF4)' }}>
         <div className="animate-scale-in" style={{ textAlign: 'center', width: '100%' }}>
@@ -116,7 +163,7 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
   }
 
   return (
-    <div className="screen-enter" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <div className="screen-enter" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg, #008B74 0%, #0F766E 100%)',

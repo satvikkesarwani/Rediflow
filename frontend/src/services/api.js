@@ -7,8 +7,16 @@ async function request(method, path, body = null) {
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(`${BASE_URL}${path}`, opts);
-  const data = await res.json();
-  if (!res.ok) throw { status: res.status, detail: data.detail || data.error || 'Unknown error', ...data };
+  // Parse JSON defensively: non-JSON bodies (e.g. HTML 502 from a proxy, FastAPI 422
+  // validation errors with unexpected content-type) would throw a SyntaxError if we
+  // called res.json() unconditionally before checking res.ok.
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw { status: res.status, detail: `HTTP ${res.status}` };
+  }
+  if (!res.ok) throw { status: res.status, detail: data?.detail || data?.reason || data?.error || 'Unknown error', ...data };
   return data;
 }
 
@@ -27,8 +35,12 @@ export const api = {
   createBooking: (routeId) =>
     request('POST', '/bookings/create', { routeId, userId: 'demo-user' }),
 
-  pay: (bookingId) =>
-    request('POST', '/payments/pay', { bookingId, paymentMethod: 'Mock NCMC Wallet' }),
+  getBooking: (bookingId) => request('GET', `/bookings/${bookingId}`),
+
+  // paymentMethod defaults to 'NCMC Wallet' for wallet payments. UPI/Card callers
+  // should pass the actual method so the backend payment record is correct.
+  pay: (bookingId, paymentMethod = 'NCMC Wallet') =>
+    request('POST', '/payments/pay', { bookingId, paymentMethod }),
 
   getJourneyUpdates: (bookingId) => request('GET', `/journey/${bookingId}/updates`),
 

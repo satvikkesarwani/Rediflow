@@ -15,7 +15,7 @@ const TAG_CONFIG = {
 export function RouteCard({ route, index = 0, onClick, delay = 0 }) {
   const [showWhy, setShowWhy] = useState(false);
   const tag = TAG_CONFIG[route.tag] || TAG_CONFIG.Alternative;
-  const modes = route.summary.split(' → ').map((m) => m.trim().toLowerCase());
+  const modes = (route.summary || '').split(' → ').map((m) => m.trim().toLowerCase());
   const score = matchScore(route);
   const status = statusLabel(route);
   const isTop = index === 0;
@@ -37,8 +37,8 @@ export function RouteCard({ route, index = 0, onClick, delay = 0 }) {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: tag.bg, color: tag.color, padding: '4px 10px', borderRadius: 16, fontSize: 12, fontWeight: 700 }}>
             {tag.icon} {tag.label}
           </div>
-          {isTop && route.tag !== 'Fastest' && (
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 3, background: '#ECFDF5', color: '#059669', padding: '4px 10px', borderRadius: 16, fontSize: 12, fontWeight: 700 }}>Fastest</div>
+          {isTop && (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 3, background: '#F0FDF4', color: '#15803D', padding: '4px 10px', borderRadius: 16, fontSize: 12, fontWeight: 700 }}>Top Pick</div>
           )}
           <div style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 700, color: status.color }}>{status.text}</div>
         </div>

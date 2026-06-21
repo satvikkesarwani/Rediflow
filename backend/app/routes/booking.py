@@ -58,3 +58,11 @@ def create_booking(req: BookingRequest):
     bookings[booking_id] = booking
 
     return BookingResponse(**booking)
+
+
+@router.get('/bookings/{bookingId}', response_model=BookingResponse)
+def get_booking(bookingId: str):
+    booking = bookings.get(bookingId)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found.")
+    return BookingResponse(**booking)

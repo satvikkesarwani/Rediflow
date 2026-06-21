@@ -25,6 +25,19 @@ def pay(req: PaymentRequest):
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found.")
 
+    # Idempotency guard: if this booking was already paid, return the existing payment
+    # record instead of deducting again. This prevents double-charges from network
+    # retries, browser back/forward cache replays, or accidental duplicate calls.
+    if booking.get("status") == "Paid":
+        existing = payments.get(req.bookingId)
+        if existing:
+            return PaymentSuccessResponse(
+                paymentStatus="Success",
+                journeyPassId=existing["journeyPassId"],
+                qrCodeText=existing["qrCodeText"],
+                walletBalance=existing["walletBalanceAfterRupees"],
+            )
+
     user_id = booking["userId"]
     balance = wallet_balances.get(user_id, 500)
     amount = booking["totalFareRupees"]

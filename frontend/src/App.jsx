@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './index.css';
 import { api } from './services/api';
 
@@ -13,12 +13,13 @@ import { WalletScreen } from './screens/WalletScreen';
 import { CarbonDashboardScreen } from './screens/CarbonDashboardScreen';
 import { TripHistoryScreen } from './screens/TripHistoryScreen';
 import { VoiceAssistant } from './components/VoiceAssistant';
-import { prefToBackend } from './components/PreferenceSelector';
+import { prefToBackend } from './data/preferences';
 import { prefLabel } from './data/assistant';
 import { carbonKg } from './data/routeMeta';
 import { recordEcoTrip } from './data/eco';
 import { recordTrip } from './data/history';
-import { Toast, useToast } from './components/Toast';
+import { Toast } from './components/Toast';
+import { useToast } from './hooks/useToast';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -36,8 +37,6 @@ const SCREENS = {
 };
 
 export default function App() {
-  // Initialize state from sessionStorage if available
-  const [screen, setScreen] = useState(() => sessionStorage.getItem('app_screen') || SCREENS.HOME);
   const { toasts, addToast, removeToast } = useToast();
 
   // State carried through the flow, persisted in sessionStorage
@@ -47,15 +46,40 @@ export default function App() {
   const [bookingData, setBookingData] = useState(() => readSession('app_bookingData'));
   const [paymentResult, setPaymentResult] = useState(() => readSession('app_paymentResult'));
 
-  // Sync state to sessionStorage whenever it changes
+  // Initialize screen from sessionStorage but guard against missing required state.
+  // This runs synchronously during the first render (lazy initializer) so no effect needed.
+  const [screen, setScreen] = useState(() => {
+    const s = sessionStorage.getItem('app_screen') || SCREENS.HOME;
+    const needsRoute = [SCREENS.DETAILS, SCREENS.BOOKING, SCREENS.PAYMENT, SCREENS.PASS, SCREENS.TRACKING];
+    const needsBooking = [SCREENS.BOOKING, SCREENS.PAYMENT, SCREENS.PASS, SCREENS.TRACKING];
+    const needsPayment = [SCREENS.PASS, SCREENS.TRACKING];
+    // We can't use the state variables here yet, so read directly from sessionStorage.
+    const hasRoute = !!sessionStorage.getItem('app_selectedRoute');
+    const hasBooking = !!sessionStorage.getItem('app_bookingData');
+    const hasPayment = !!sessionStorage.getItem('app_paymentResult');
+    if (needsRoute.includes(s) && !hasRoute) return SCREENS.HOME;
+    if (needsBooking.includes(s) && !hasBooking) return SCREENS.HOME;
+    if (needsPayment.includes(s) && !hasPayment) return SCREENS.HOME;
+    return s;
+  });
+
+  // Sync the current screen to sessionStorage on every change.
   useEffect(() => {
     sessionStorage.setItem('app_screen', screen);
+  }, [screen]);
+
+  // Sync flow data to sessionStorage whenever it changes (separate from the guard).
+  useEffect(() => {
     if (searchResult) sessionStorage.setItem('app_searchResult', JSON.stringify(searchResult)); else sessionStorage.removeItem('app_searchResult');
     if (selectedRoute) sessionStorage.setItem('app_selectedRoute', JSON.stringify(selectedRoute)); else sessionStorage.removeItem('app_selectedRoute');
     if (bookingData) sessionStorage.setItem('app_bookingData', JSON.stringify(bookingData)); else sessionStorage.removeItem('app_bookingData');
     if (paymentResult) sessionStorage.setItem('app_paymentResult', JSON.stringify(paymentResult)); else sessionStorage.removeItem('app_paymentResult');
-  }, [screen, searchResult, selectedRoute, bookingData, paymentResult]);
+  }, [searchResult, selectedRoute, bookingData, paymentResult]);
   const [walletBalance, setWalletBalance] = useState(500);
+
+  // Keep a ref so async callbacks always read the current balance.
+  const walletBalanceRef = useRef(walletBalance);
+  useEffect(() => { walletBalanceRef.current = walletBalance; }, [walletBalance]);
 
   // Sync wallet balance from backend on mount
   useEffect(() => {
@@ -66,7 +90,18 @@ export default function App() {
 
   const [assistantOpen, setAssistantOpen] = useState(false);
 
-  const go = (s) => setScreen(s);
+  // go() is the single point of screen transitions. It enforces guards so that
+  // screens that require state never render blank (e.g. after a session restore
+  // where sessionStorage was partially cleared).
+  const go = (s) => {
+    const needsRoute = [SCREENS.DETAILS, SCREENS.BOOKING, SCREENS.PAYMENT, SCREENS.PASS, SCREENS.TRACKING];
+    const needsBooking = [SCREENS.BOOKING, SCREENS.PAYMENT, SCREENS.PASS, SCREENS.TRACKING];
+    const needsPayment = [SCREENS.PASS, SCREENS.TRACKING];
+    if (needsRoute.includes(s) && !selectedRoute) { setScreen(SCREENS.HOME); return; }
+    if (needsBooking.includes(s) && !bookingData) { setScreen(SCREENS.HOME); return; }
+    if (needsPayment.includes(s) && !paymentResult) { setScreen(SCREENS.HOME); return; }
+    setScreen(s);
+  };
 
   const handleSearch = (result) => {
     setSearchResult(result);
@@ -90,7 +125,10 @@ export default function App() {
 
   // One-shot voice booking: search → book → pay → pass, reporting each step to the
   // assistant's progress stepper. Resolves with the pass once state is ready.
-  const bookViaAssistant = async ({ source, destination, prefId = 'balanced', payment = 'wallet', onProgress = () => {} }) => {
+  // existingBookingId: when provided (e.g. UPI retry after wallet low-balance), the
+  // createBooking step is skipped and the existing booking is reused — preventing
+  // a duplicate booking for the same journey.
+  const bookViaAssistant = async ({ source, destination, prefId = 'balanced', payment = 'wallet', onProgress = () => {}, existingBookingId = null }) => {
     const src = source || 'Central Railway Station';
     if (src === destination) throw { reason: 'same' };
     const backendPref = prefToBackend(prefId);
@@ -98,14 +136,26 @@ export default function App() {
     // 1) Route
     onProgress('route', 'active');
     const data = await api.searchRoutes(src, destination, backendPref);
+    if (!data.routes?.length) throw new Error('No routes found');
     const top = data.routes[0];
     const route = { ...top, source: src, destination };
     await sleep(750);
     onProgress('route', 'done', { detail: `${prefLabel(prefId)} · ₹${top.totalFareRupees} · ${top.totalTimeMinutes} min` });
 
-    // 2) Booking
+    // 2) Booking — skip if we already have a booking from a previous attempt (e.g. UPI retry)
     onProgress('booking', 'active');
-    const booking = await api.createBooking(top.routeId);
+    let booking;
+    if (existingBookingId) {
+      // Reuse the existing booking; fetch full booking to get legs/ticketIds for the pass.
+      try {
+        booking = await api.getBooking(existingBookingId);
+      } catch {
+        // Fallback: reconstruct minimal stub if GET fails (should be rare in-memory)
+        booking = { bookingId: existingBookingId, totalFareRupees: top.totalFareRupees, userId: 'demo-user', legs: [] };
+      }
+    } else {
+      booking = await api.createBooking(top.routeId);
+    }
     await sleep(700);
     onProgress('booking', 'done', { detail: booking.bookingId });
 
@@ -114,22 +164,36 @@ export default function App() {
     let payResult;
     if (payment === 'wallet') {
       try {
-        const pay = await api.pay(booking.bookingId);
+        const pay = await api.pay(booking.bookingId, 'NCMC Wallet');
         payResult = { ...pay, method: 'NCMC Wallet' };
         setWalletBalance(pay.walletBalance);
       } catch (e) {
         if (e.status === 400) {
           // Use walletBalance from the server response if available, otherwise fall back to the prop
-          const currentBalance = e.walletBalance ?? walletBalance;
+          const currentBalance = e.walletBalance ?? walletBalanceRef.current;
           onProgress('payment', 'error', { balance: currentBalance, fare: booking.totalFareRupees });
-          throw { reason: 'lowbalance', fare: booking.totalFareRupees };
+          // Surface bookingId so the UPI retry can reuse this booking
+          throw { reason: 'lowbalance', fare: booking.totalFareRupees, bookingId: booking.bookingId };
         }
         throw e;
       }
     } else {
-      await sleep(900);
-      const passId = `RF-PASS-${String(booking.bookingId).slice(-4)}${Math.floor(1000 + Math.random() * 9000)}`;
-      payResult = { paymentStatus: 'Success', journeyPassId: passId, walletBalance, method: payment === 'upi' ? 'UPI' : 'Card' };
+      // Call the backend to mark the booking as paid (UPI/Card simulation).
+      const upiCardMethod = payment === 'upi' ? 'UPI' : 'Card';
+      try {
+        const pay = await api.pay(booking.bookingId, upiCardMethod);
+        payResult = { ...pay, method: upiCardMethod };
+        setWalletBalance(pay.walletBalance);
+      } catch (e) {
+        // Only generate a local pass for network/simulation errors (no HTTP status).
+        // Real 4xx/5xx server errors should surface as failures, not fake success passes.
+        if (e?.status) throw e;
+        await sleep(900);
+        const passId = `RF-PASS-${String(booking.bookingId).slice(-4)}${Math.floor(1000 + Math.random() * 9000)}`;
+        payResult = { paymentStatus: 'Success', journeyPassId: passId, walletBalance: walletBalanceRef.current, method: upiCardMethod, localOnly: true };
+        // Re-sync wallet balance from server since the backend may have partially mutated it
+        api.getWalletBalance().then(d => setWalletBalance(d.balance)).catch(() => {});
+      }
     }
     await sleep(550);
     onProgress('payment', 'done', { detail: `${payResult.method} · paid ₹${booking.totalFareRupees}` });
@@ -152,13 +216,16 @@ export default function App() {
     setBookingData(booking);
     setPaymentResult(payResult);
 
-    return { passId: payResult.journeyPassId };
+    return { passId: payResult.journeyPassId, bookingId: booking.bookingId };
   };
 
   const openPassFromAssistant = () => { setAssistantOpen(false); go(SCREENS.PASS); };
 
-  const handleSelectRoute = (route) => {
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
+
+  const handleSelectRoute = (route, routeIndex = 0) => {
     setSelectedRoute({ ...route, source: searchResult?.source, destination: searchResult?.destination });
+    setSelectedRouteIndex(routeIndex);
     go(SCREENS.DETAILS);
   };
 
@@ -195,7 +262,7 @@ export default function App() {
         )}
 
         {screen === SCREENS.ECO && (
-          <CarbonDashboardScreen onBack={() => go(SCREENS.HOME)} />
+          <CarbonDashboardScreen onBack={() => go(SCREENS.HOME)} greenPoints={paymentResult?.greenPoints} />
         )}
 
         {screen === SCREENS.HISTORY && (
@@ -227,6 +294,7 @@ export default function App() {
         {screen === SCREENS.DETAILS && selectedRoute && (
           <RouteDetailsScreen
             route={selectedRoute}
+            routeIndex={selectedRouteIndex}
             onBook={handleBook}
             onBack={() => go(SCREENS.ROUTES)}
             addToast={addToast}
@@ -260,6 +328,7 @@ export default function App() {
             booking={bookingData}
             route={selectedRoute}
             onStartJourney={handleStartJourney}
+            onHome={() => go(SCREENS.HOME)}
             addToast={addToast}
           />
         )}

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 
@@ -37,9 +37,11 @@ class RouteSearchResponse(BaseModel):
 
 
 class Step(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     stepNumber: int
     mode: str
-    from_: str
+    from_: str = Field(serialization_alias='from')
     to: str
     routeNumber: Optional[str] = None
     lineName: Optional[str] = None
@@ -48,14 +50,6 @@ class Step(BaseModel):
     fareRupees: int
     distanceMeters: int
     instruction: str
-
-    class Config:
-        populate_by_name = True
-
-    def model_dump(self, **kwargs):
-        d = super().model_dump(**kwargs)
-        d["from"] = d.pop("from_", None)
-        return d
 
 
 class RouteDetail(BaseModel):
@@ -67,6 +61,7 @@ class RouteDetail(BaseModel):
     totalFareRupees: int
     transferCount: int
     totalWalkingMeters: int
+    walkingDistanceMeters: int = 0
     carbonLabel: str
     safetyLabel: str
     reliabilityLabel: str
