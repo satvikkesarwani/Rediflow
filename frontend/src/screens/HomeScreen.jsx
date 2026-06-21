@@ -5,12 +5,12 @@ import { RideMap } from '../components/RideMap';
 import { LOCATIONS, coordsFor } from '../data/geo';
 import {
   Wallet, MapPin, ChevronRight, ChevronDown, Train, Bus, Car, Footprints,
-  ArrowRightLeft, Clock, Calendar, ShieldCheck, History, Leaf,
+  ArrowRightLeft, Clock, Calendar, ShieldCheck, History, Leaf, Sparkles,
 } from 'lucide-react';
 
 const RECENT_KEY = 'rf_recent_searches';
 
-export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, addToast }) {
+export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, onOpenHistory, onOpenAssistant, addToast }) {
   const [locations, setLocations] = useState([]);
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
@@ -87,22 +87,21 @@ export function HomeScreen({ onSearch, onOpenWallet, onOpenEco, addToast }) {
   return (
     <div className="screen-enter" style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', background: 'white' }}>
 
-      {/* App Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px 24px 16px', zIndex: 10, background: 'white' }}>
-        <div style={{ width: 64 }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.5px' }}>
+      {/* App Bar — logo left, actions right */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '22px 18px 14px', zIndex: 10, background: 'white' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 19, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.5px' }}>
           <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center' }}>
             <MapPin size={22} strokeWidth={2.5} />
           </div>
           RideFlow
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <button title="Carbon Dashboard" style={{ background: '#f0fdf9', border: 'none', cursor: 'pointer', width: 38, height: 38, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onOpenEco}>
-            <Leaf size={20} color="var(--primary)" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button className="btn-tap" title="RideFlow Assistant — talk to plan" onClick={onOpenAssistant} style={{ background: 'linear-gradient(135deg,#008B74,#10B981)', border: 'none', cursor: 'pointer', width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 10px rgba(0,139,116,0.35)' }}>
+            <Sparkles size={19} color="white" />
           </button>
-          <button title="Wallet" style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={onOpenWallet}>
-            <Wallet size={24} color="#0F172A" />
-          </button>
+          <IconBtn title="Travel History" onClick={onOpenHistory}><History size={19} color="var(--primary)" /></IconBtn>
+          <IconBtn title="Carbon Dashboard" onClick={onOpenEco}><Leaf size={19} color="var(--primary)" /></IconBtn>
+          <IconBtn title="Wallet" onClick={onOpenWallet}><Wallet size={19} color="var(--primary)" /></IconBtn>
         </div>
       </div>
 
@@ -257,6 +256,14 @@ function FieldRow({ dot, label, active, onActivate, children }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function IconBtn({ title, onClick, children }) {
+  return (
+    <button className="btn-tap" title={title} onClick={onClick} style={{ background: '#f0fdf9', border: '1px solid #d1fae5', cursor: 'pointer', width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+      {children}
+    </button>
   );
 }
 

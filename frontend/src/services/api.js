@@ -8,7 +8,7 @@ async function request(method, path, body = null) {
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(`${BASE_URL}${path}`, opts);
   const data = await res.json();
-  if (!res.ok) throw { status: res.status, detail: data.detail || data.error || 'Unknown error' };
+  if (!res.ok) throw { status: res.status, detail: data.detail || data.error || 'Unknown error', ...data };
   return data;
 }
 

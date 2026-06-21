@@ -11,7 +11,16 @@ import { JourneyPassScreen } from './screens/JourneyPassScreen';
 import { LiveTrackingScreen } from './screens/LiveTrackingScreen';
 import { WalletScreen } from './screens/WalletScreen';
 import { CarbonDashboardScreen } from './screens/CarbonDashboardScreen';
+import { TripHistoryScreen } from './screens/TripHistoryScreen';
+import { VoiceAssistant } from './components/VoiceAssistant';
+import { prefToBackend } from './components/PreferenceSelector';
+import { prefLabel } from './data/assistant';
+import { carbonKg } from './data/routeMeta';
+import { recordEcoTrip } from './data/eco';
+import { recordTrip } from './data/history';
 import { Toast, useToast } from './components/Toast';
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const SCREENS = {
   HOME: 'HOME',
@@ -23,6 +32,7 @@ const SCREENS = {
   TRACKING: 'TRACKING',
   WALLET: 'WALLET',
   ECO: 'ECO',
+  HISTORY: 'HISTORY',
 };
 
 export default function App() {
@@ -31,10 +41,11 @@ export default function App() {
   const { toasts, addToast, removeToast } = useToast();
 
   // State carried through the flow, persisted in sessionStorage
-  const [searchResult, setSearchResult] = useState(() => JSON.parse(sessionStorage.getItem('app_searchResult')) || null);
-  const [selectedRoute, setSelectedRoute] = useState(() => JSON.parse(sessionStorage.getItem('app_selectedRoute')) || null);
-  const [bookingData, setBookingData] = useState(() => JSON.parse(sessionStorage.getItem('app_bookingData')) || null);
-  const [paymentResult, setPaymentResult] = useState(() => JSON.parse(sessionStorage.getItem('app_paymentResult')) || null);
+  const readSession = (key) => { try { return JSON.parse(sessionStorage.getItem(key)) || null; } catch { return null; } };
+  const [searchResult, setSearchResult] = useState(() => readSession('app_searchResult'));
+  const [selectedRoute, setSelectedRoute] = useState(() => readSession('app_selectedRoute'));
+  const [bookingData, setBookingData] = useState(() => readSession('app_bookingData'));
+  const [paymentResult, setPaymentResult] = useState(() => readSession('app_paymentResult'));
 
   // Sync state to sessionStorage whenever it changes
   useEffect(() => {
@@ -53,6 +64,8 @@ export default function App() {
       .catch(() => {/* ignore, use default */});
   }, []);
 
+  const [assistantOpen, setAssistantOpen] = useState(false);
+
   const go = (s) => setScreen(s);
 
   const handleSearch = (result) => {
@@ -60,8 +73,92 @@ export default function App() {
     go(SCREENS.ROUTES);
   };
 
-  const handleSelectRoute = (route) => {
+  // Voice/AI assistant resolves a natural-language command into a real route search.
+  const handleAssistantPlan = async ({ source, destination, prefId = 'balanced', safeMode = false }) => {
+    const src = source || 'Central Railway Station';
+    if (src === destination) { addToast('Pick a different destination', 'error'); return; }
+    try {
+      const backendPref = prefToBackend(prefId);
+      const data = await api.searchRoutes(src, destination, backendPref);
+      setSearchResult({ routes: data.routes, source: src, destination, preference: backendPref, prefId, safeMode });
+      setAssistantOpen(false);
+      go(SCREENS.ROUTES);
+    } catch (e) {
+      addToast(e.detail || 'No routes found for that trip', 'error');
+    }
+  };
+
+  // One-shot voice booking: search → book → pay → pass, reporting each step to the
+  // assistant's progress stepper. Resolves with the pass once state is ready.
+  const bookViaAssistant = async ({ source, destination, prefId = 'balanced', payment = 'wallet', onProgress = () => {} }) => {
+    const src = source || 'Central Railway Station';
+    if (src === destination) throw { reason: 'same' };
+    const backendPref = prefToBackend(prefId);
+
+    // 1) Route
+    onProgress('route', 'active');
+    const data = await api.searchRoutes(src, destination, backendPref);
+    const top = data.routes[0];
+    const route = { ...top, source: src, destination };
+    await sleep(750);
+    onProgress('route', 'done', { detail: `${prefLabel(prefId)} · ₹${top.totalFareRupees} · ${top.totalTimeMinutes} min` });
+
+    // 2) Booking
+    onProgress('booking', 'active');
+    const booking = await api.createBooking(top.routeId);
+    await sleep(700);
+    onProgress('booking', 'done', { detail: booking.bookingId });
+
+    // 3) Payment
+    onProgress('payment', 'active', { method: payment });
+    let payResult;
+    if (payment === 'wallet') {
+      try {
+        const pay = await api.pay(booking.bookingId);
+        payResult = { ...pay, method: 'NCMC Wallet' };
+        setWalletBalance(pay.walletBalance);
+      } catch (e) {
+        if (e.status === 400) {
+          // Use walletBalance from the server response if available, otherwise fall back to the prop
+          const currentBalance = e.walletBalance ?? walletBalance;
+          onProgress('payment', 'error', { balance: currentBalance, fare: booking.totalFareRupees });
+          throw { reason: 'lowbalance', fare: booking.totalFareRupees };
+        }
+        throw e;
+      }
+    } else {
+      await sleep(900);
+      const passId = `RF-PASS-${String(booking.bookingId).slice(-4)}${Math.floor(1000 + Math.random() * 9000)}`;
+      payResult = { paymentStatus: 'Success', journeyPassId: passId, walletBalance, method: payment === 'upi' ? 'UPI' : 'Card' };
+    }
+    await sleep(550);
+    onProgress('payment', 'done', { detail: `${payResult.method} · paid ₹${booking.totalFareRupees}` });
+
+    // 4) Pass
+    onProgress('pass', 'active');
+    await sleep(650);
+    onProgress('pass', 'done', { detail: payResult.journeyPassId });
+
+    // Rewards + persistence (keeps History / Carbon dashboards consistent)
+    const co2 = Number(carbonKg(route)) || 2;
+    const greenPoints = Math.max(5, Math.round(booking.totalFareRupees / 2));
+    payResult.greenPoints = greenPoints;
+    recordEcoTrip({ co2Kg: co2, points: greenPoints, moneySaved: 0, eco: route.carbonLabel === 'Low' });
+    recordTrip({ passId: payResult.journeyPassId, from: src, to: destination, summary: route.summary, fare: booking.totalFareRupees, co2, status: 'Completed' });
+
+    // Stage state for the Pass screen
+    setSearchResult({ routes: data.routes, source: src, destination, preference: backendPref, prefId, safeMode: false });
     setSelectedRoute(route);
+    setBookingData(booking);
+    setPaymentResult(payResult);
+
+    return { passId: payResult.journeyPassId };
+  };
+
+  const openPassFromAssistant = () => { setAssistantOpen(false); go(SCREENS.PASS); };
+
+  const handleSelectRoute = (route) => {
+    setSelectedRoute({ ...route, source: searchResult?.source, destination: searchResult?.destination });
     go(SCREENS.DETAILS);
   };
 
@@ -92,13 +189,17 @@ export default function App() {
         {screen === SCREENS.HOME && (
           <HomeScreen onSearch={handleSearch} onOpenWallet={async () => {
             // refresh balance before opening wallet
-            try { const d = await api.getWalletBalance(); setWalletBalance(d.balance); } catch {}
+            try { const d = await api.getWalletBalance(); setWalletBalance(d.balance); } catch { /* ignore, use cached balance */ }
             go(SCREENS.WALLET);
-          }} onOpenEco={() => go(SCREENS.ECO)} addToast={addToast} />
+          }} onOpenEco={() => go(SCREENS.ECO)} onOpenHistory={() => go(SCREENS.HISTORY)} onOpenAssistant={() => setAssistantOpen(true)} addToast={addToast} />
         )}
 
         {screen === SCREENS.ECO && (
           <CarbonDashboardScreen onBack={() => go(SCREENS.HOME)} />
+        )}
+
+        {screen === SCREENS.HISTORY && (
+          <TripHistoryScreen onBack={() => go(SCREENS.HOME)} />
         )}
 
         {screen === SCREENS.WALLET && (
@@ -146,7 +247,7 @@ export default function App() {
             booking={bookingData}
             route={selectedRoute}
             onSuccess={handlePaymentSuccess}
-            onBack={() => go(SCREENS.ROUTES)}
+            onBack={() => go(SCREENS.BOOKING)}
             addToast={addToast}
             walletBalance={walletBalance}
             setWalletBalance={setWalletBalance}
@@ -172,6 +273,14 @@ export default function App() {
             addToast={addToast}
           />
         )}
+
+        <VoiceAssistant
+          open={assistantOpen}
+          onClose={() => setAssistantOpen(false)}
+          onPlan={handleAssistantPlan}
+          onBook={bookViaAssistant}
+          onOpenPass={openPassFromAssistant}
+        />
 
         <Toast toasts={toasts} removeToast={removeToast} />
       </div>
