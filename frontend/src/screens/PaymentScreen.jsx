@@ -4,6 +4,7 @@ import { QrCode, upiIntent } from '../components/QrCode';
 import { coordsFor, distanceKm } from '../data/geo';
 import { carbonKg } from '../data/routeMeta';
 import { recordEcoTrip } from '../data/eco';
+import { recordTrip } from '../data/history';
 import { ArrowLeft, CheckCircle, XCircle, Ticket, Wallet, CreditCard, Lock, Smartphone, QrCode as QrIcon, Sparkles, Tag, ChevronDown, Leaf, ShieldCheck } from 'lucide-react';
 
 const OFFERS = [
@@ -53,6 +54,16 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast, wal
     eco: route.carbonLabel === 'Low',
   });
 
+  const logTrip = (passId) => recordTrip({
+    passId,
+    from: route.source,
+    to: route.destination,
+    summary: route.summary,
+    fare: payable,
+    co2: Number(carbonKg(route)) || 2,
+    status: 'Completed',
+  });
+
   const handlePay = async () => {
     setState('paying');
     // Wallet uses the real NCMC deduction; UPI/Card simulate an external confirmation.
@@ -63,6 +74,7 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast, wal
           setResult({ ...data, method: 'NCMC Wallet', greenPoints });
           setState('success');
           logEco();
+          logTrip(data.journeyPassId);
           if (setWalletBalance) setWalletBalance(data.walletBalance);
           addToast('Payment successful!', 'success');
         } else { setResult(data); setState('failed'); }
@@ -74,9 +86,11 @@ export function PaymentScreen({ booking, route, onSuccess, onBack, addToast, wal
     }
     // UPI / Card: emulate gateway confirmation (no wallet dependency)
     setTimeout(() => {
-      setResult({ paymentStatus: 'Success', journeyPassId: genPassId(), walletBalance, method: method === 'upi' ? 'UPI' : 'Card', greenPoints });
+      const passId = genPassId();
+      setResult({ paymentStatus: 'Success', journeyPassId: passId, walletBalance, method: method === 'upi' ? 'UPI' : 'Card', greenPoints });
       setState('success');
       logEco();
+      logTrip(passId);
       addToast('Payment confirmed!', 'success');
     }, 1600);
   };

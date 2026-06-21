@@ -33,34 +33,24 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
   const etaRef = useRef(null);
 
   useEffect(() => {
+    let cancelled = false;
     // Fetch updates
     api.getJourneyUpdates(booking.bookingId)
       .then((data) => {
-        setAllUpdates(data.updates || []);
-        setStarted(true);
+        if (!cancelled) {
+          setAllUpdates(data.updates || []);
+          setStarted(true);
+        }
       })
-      .catch(() => addToast('Could not load journey updates', 'error'));
+      .catch(() => { if (!cancelled) addToast('Could not load journey updates', 'error'); });
+    return () => { cancelled = true; };
   }, []);
 
-  // Sequential update reveal
+  // Sequential update reveal — pure increment only, no side-effects inside updater
   useEffect(() => {
     if (!started || allUpdates.length === 0) return;
 
-    const revealNext = () => {
-      setVisibleCount((prev) => {
-        const next = prev + 1;
-        const upd = allUpdates[prev];
-
-        if (upd?.type === 'delay') setShowDelay(true);
-        if (upd?.type === 'completed') {
-          setCompleted(true);
-          clearInterval(timerRef.current);
-          clearInterval(etaRef.current);
-        }
-
-        return next;
-      });
-    };
+    const revealNext = () => setVisibleCount((prev) => prev + 1);
 
     // First update immediately
     revealNext();
@@ -73,6 +63,18 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
       clearInterval(etaRef.current);
     };
   }, [started, allUpdates]);
+
+  // Handle side-effects triggered by newly revealed updates
+  useEffect(() => {
+    if (visibleCount === 0 || allUpdates.length === 0) return;
+    const upd = allUpdates[visibleCount - 1];
+    if (upd?.type === 'delay') setShowDelay(true);
+    if (upd?.type === 'completed' || visibleCount >= allUpdates.length) {
+      clearInterval(timerRef.current);
+      clearInterval(etaRef.current);
+      setCompleted(true);
+    }
+  }, [visibleCount, allUpdates]);
 
   // Auto-dismiss delay banner
   useEffect(() => {
@@ -120,9 +122,18 @@ export function LiveTrackingScreen({ booking, passData, route, onComplete, addTo
         background: 'linear-gradient(135deg, #008B74 0%, #0F766E 100%)',
         padding: '24px 20px', color: 'white',
       }}>
-        <div style={{ marginBottom: 12 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 800 }}>Live Journey</h2>
-          <p style={{ fontSize: 14, color: '#A7F3D0', marginTop: 4 }}>{route.summary}</p>
+        <div style={{ marginBottom: 12, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div>
+            <h2 style={{ fontSize: 22, fontWeight: 800 }}>Live Journey</h2>
+            <p style={{ fontSize: 14, color: '#A7F3D0', marginTop: 4 }}>{route.summary}</p>
+          </div>
+          <button
+            onClick={onComplete}
+            aria-label="End journey and return to home"
+            style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: 10, padding: '6px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
+          >
+            End Journey
+          </button>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16, background: 'rgba(0,0,0,0.1)', padding: '12px 16px', borderRadius: 12 }}>
           <div>

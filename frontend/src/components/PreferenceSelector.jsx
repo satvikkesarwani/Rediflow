@@ -25,6 +25,7 @@ export function PreferenceSelector({ value, onChange }) {
         return (
           <button
             key={p.id}
+            className="btn-tap"
             onClick={() => onChange(p.id)}
             style={{
               padding: '8px 13px',
